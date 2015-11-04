@@ -1,0 +1,34 @@
+<configuration>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>64</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>1024</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-vcores</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-vcores</name>
+        <value>4</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>64</value>
+    </property>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>64</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>64</value>
+    </property>
+    <property>
+        <name>yarn.nm.liveness-monitor.expiry-interval-ms</name>
+        <value>8000</value>
+    </property>
+</configuration>

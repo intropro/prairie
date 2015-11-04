@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.intropro.prairie</groupId>
+        <artifactId>prairie-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>benchmarks</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>hdfs-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>yarn-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>hive2-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>oozie-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>kafka-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>zookeeper-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>pig-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>flume-unit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

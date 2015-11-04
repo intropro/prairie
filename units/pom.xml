@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.intropro.prairie</groupId>
+        <artifactId>prairie-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>units</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>unit-common</module>
+        <module>hadoop-common</module>
+        <module>hdfs-unit</module>
+        <module>yarn-unit</module>
+        <module>hive2-unit</module>
+        <module>oozie-unit</module>
+        <module>flume-unit</module>
+        <module>zookeeper-unit</module>
+        <module>kafka-unit</module>
+        <module>pig-unit</module>
+    </modules>
+
+
+</project>

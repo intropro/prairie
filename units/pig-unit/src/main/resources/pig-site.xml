@@ -1,0 +1,6 @@
+<configuration>
+    <property>
+        <name>exectype</name>
+        <value>MR</value>
+    </property>
+</configuration>

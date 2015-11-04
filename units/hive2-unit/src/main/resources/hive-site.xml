@@ -1,0 +1,10 @@
+<configuration>
+    <property>
+        <name>hive.server2.async.exec.shutdown.timeout</name>
+        <value>30s</value>
+    </property>
+    <property>
+        <name>hive.server2.session.check.interval</name>
+        <value>5s</value>
+    </property>
+</configuration>
