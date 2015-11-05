@@ -86,6 +86,7 @@ public class Hive2Unit extends HadoopUnit {
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVECONVERTJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVESKEWJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
+        hiveConf.setBoolVar(HiveConf.ConfVars.SUBMITLOCALTASKVIACHILD, false);
         hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
         String metaStorageUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString() + ";create=true";
         hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metaStorageUrl);
