@@ -11,10 +11,6 @@
 
     <artifactId>test-utils</artifactId>
 
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>

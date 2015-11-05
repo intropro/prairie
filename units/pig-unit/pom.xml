@@ -11,10 +11,6 @@
 
     <artifactId>pig-unit</artifactId>
 
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.intropro.prairie</groupId>

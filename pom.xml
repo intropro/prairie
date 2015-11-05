@@ -44,6 +44,32 @@
         <url>git@github.com:intropro/prairie.git</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>nexus-internal-releases</id>
+            <name>EA Nexus Releases</name>
+            <url>http://build.ea.intropro.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>nexus-internal-snapshots</id>
+            <name>EA Nexus Snapshots</name>
+            <url>http://build.ea.intropro.com:8081/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-internal-releases</id>
+            <name>EA Nexus Releases</name>
+            <url>http://build.ea.intropro.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-internal-snapshots</id>
+            <name>EA Nexus Snapshots</name>
+            <url>http://build.ea.intropro.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <modules>
         <module>test-utils</module>
         <module>format</module>
@@ -58,27 +84,24 @@
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <memory.xmx>1024</memory.xmx>
         <memory.xms>256</memory.xms>
-        <maven.deploy.skip>true</maven.deploy.skip>
 
-        <org.apache.hadoop-hadoop-minicluster.version>2.7.1</org.apache.hadoop-hadoop-minicluster.version>
-        <org.apache.hadoop-hadoop-client.version>2.7.1</org.apache.hadoop-hadoop-client.version>
-        <org.apache.oozie-oozie-core.version>4.2.0</org.apache.oozie-oozie-core.version>
-        <org.apache.hive.version>1.2.1</org.apache.hive.version>
+        <hadoop.version>2.7.1</hadoop.version>
+        <oozie.version>4.2.0</oozie.version>
+        <hive.version>1.2.1</hive.version>
+        <flume.version>1.6.0</flume.version>
+        <zookeeper.version>3.4.6</zookeeper.version>
+        <kafka.version>0.8.2.2</kafka.version>
+        <pig.version>0.15.0</pig.version>
         <org.hsqldb-hsqldb.version>2.3.3</org.hsqldb-hsqldb.version>
         <org.apache.commons-commons-csv.version>1.2</org.apache.commons-commons-csv.version>
         <commons-codec-commons-codec.version>1.10</commons-codec-commons-codec.version>
         <org.apache.avro-avro.version>1.7.4</org.apache.avro-avro.version>
-        <org.apache.flume-flume-ng-node.version>1.6.0</org.apache.flume-flume-ng-node.version>
         <commons-io-commons-io.version>2.4</commons-io-commons-io.version>
         <org.apache.logging.log4j-log4j-core.version>2.4</org.apache.logging.log4j-log4j-core.version>
-        <org.apache.zookeeper-zookeeper.version>3.4.6</org.apache.zookeeper-zookeeper.version>
-        <org.apache.kafka-kafka_2.10.version>0.8.2.2</org.apache.kafka-kafka_2.10.version>
-        <org.apache.pig-pig.version>0.15.0</org.apache.pig-pig.version>
         <org.codehaus.jackson-jackson-core-asl.version>1.9.1</org.codehaus.jackson-jackson-core-asl.version>
         <org.codehaus.jackson-jackson-mapper-asl.version>1.9.1</org.codehaus.jackson-jackson-mapper-asl.version>
 
         <junit-junit.version>4.12</junit-junit.version>
-        <hadoop.version>2.7.1</hadoop.version>
         <org.openjdk.jmh.version>1.11.1</org.openjdk.jmh.version>
     </properties>
 
@@ -165,17 +188,17 @@
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-minicluster</artifactId>
-                <version>${org.apache.hadoop-hadoop-minicluster.version}</version>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hive</groupId>
                 <artifactId>hive-service</artifactId>
-                <version>${org.apache.hive.version}</version>
+                <version>${hive.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hive</groupId>
                 <artifactId>hive-jdbc</artifactId>
-                <version>${org.apache.hive.version}</version>
+                <version>${hive.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hsqldb</groupId>
@@ -190,7 +213,7 @@
             <dependency>
                 <groupId>org.apache.oozie</groupId>
                 <artifactId>oozie-core</artifactId>
-                <version>${org.apache.oozie-oozie-core.version}</version>
+                <version>${oozie.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.hadoop</groupId>
@@ -201,7 +224,7 @@
             <dependency>
                 <groupId>org.apache.oozie</groupId>
                 <artifactId>oozie-sharelib-hive</artifactId>
-                <version>${org.apache.oozie-oozie-core.version}</version>
+                <version>${oozie.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -216,7 +239,17 @@
             <dependency>
                 <groupId>org.apache.flume</groupId>
                 <artifactId>flume-ng-node</artifactId>
-                <version>${org.apache.flume-flume-ng-node.version}</version>
+                <version>${flume.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flume.flume-ng-sources</groupId>
+                <artifactId>flume-kafka-source</artifactId>
+                <version>${flume.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flume</groupId>
+                <artifactId>flume-ng-core</artifactId>
+                <version>${flume.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -231,17 +264,17 @@
             <dependency>
                 <groupId>org.apache.zookeeper</groupId>
                 <artifactId>zookeeper</artifactId>
-                <version>${org.apache.zookeeper-zookeeper.version}</version>
+                <version>${zookeeper.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka_2.10</artifactId>
-                <version>${org.apache.kafka-kafka_2.10.version}</version>
+                <version>${kafka.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.pig</groupId>
                 <artifactId>pig</artifactId>
-                <version>${org.apache.pig-pig.version}</version>
+                <version>${pig.version}</version>
                 <classifier>h2</classifier>
             </dependency>
             <dependency>
@@ -257,7 +290,7 @@
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
-                <version>${org.apache.hadoop-hadoop-client.version}</version>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
@@ -310,6 +343,7 @@
             </plugins>
         </pluginManagement>
     </build>
+<!--
 
     <profiles>
         <profile>
@@ -371,5 +405,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+-->
 
 </project>
