@@ -7,7 +7,7 @@
     <groupId>com.intropro.prairie</groupId>
     <artifactId>prairie-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>Prairie</name>
     <description>BigData Embedded Cluster for Testing</description>
     <url>https://github.com/intropro/prairie</url>
