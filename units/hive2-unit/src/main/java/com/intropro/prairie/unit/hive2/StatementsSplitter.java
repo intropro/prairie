@@ -13,6 +13,9 @@
  */
 package com.intropro.prairie.unit.hive2;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -22,6 +25,8 @@ import java.util.regex.Pattern;
  * Created by presidentio on 9/28/15.
  */
 public class StatementsSplitter {
+
+    private static final Logger LOGGER = LogManager.getLogger(StatementsSplitter.class);
 
     public static final Pattern START_OF_COMMENT_PATTERN = Pattern.compile(".*\\s--", Pattern.DOTALL);
     public static final Pattern LAST_CHAR_NOT_ESCAPED_PATTERN = Pattern.compile(".*[^\\\\].", Pattern.DOTALL);

@@ -7,6 +7,7 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hive.service.cli.HiveSQLException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,5 +90,22 @@ public class Hive2UnitTest {
         FileStatus fileStatus = hdfsUnit.getFileSystem().getFileStatus(testHiveDir);
         Assert.assertEquals(Hive2Unit.HIVE_USER, fileStatus.getOwner());
         Assert.assertEquals(Hive2Unit.HIVE_GROUP, fileStatus.getGroup());
+    }
+
+    @Test
+    public void testSet() throws Exception {
+        hive2Unit.execute(IOUtils.toString(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/set/set.hql")));
+        hive2Unit.compare("select * from set_table", "hive/set/expected.csv", new SvFormat(',')).assertEquals();
+    }
+
+    @Test
+    public void testCommentSuccess() throws Exception {
+        hive2Unit.execute(IOUtils.toString(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/comment/comment-success.hql")));
+        hive2Unit.compare("select * from comment_table", "hive/comment/expected.csv", new SvFormat(',')).assertEquals();
+    }
+
+    @Test(expected = HiveSQLException.class)
+    public void testCommentFailed() throws Exception {
+        hive2Unit.execute(IOUtils.toString(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/comment/comment-failed.hql")));
     }
 }

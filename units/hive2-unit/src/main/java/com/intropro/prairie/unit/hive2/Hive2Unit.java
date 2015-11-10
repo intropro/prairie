@@ -149,11 +149,11 @@ public class Hive2Unit extends HadoopUnit {
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         List<String> splittedScript = StatementsSplitter.splitStatements(script);
         for (String scriptStatement : splittedScript.subList(0, splittedScript.size() - 1)) {
-            LOGGER.debug("Executing: " + scriptStatement);
+            LOGGER.info("Executing: " + scriptStatement);
             statement.execute(scriptStatement);
         }
         String query = splittedScript.get(splittedScript.size() - 1);
-        LOGGER.debug("Executing: " + query);
+        LOGGER.info("Executing: " + query);
         ResultSet resultSet = statement.executeQuery(query);
         while (resultSet.next()) {
             Map<String, String> row = new LinkedHashMap<String, String>();
@@ -173,7 +173,7 @@ public class Hive2Unit extends HadoopUnit {
 
     public void execute(String script) throws SQLException {
         for (String scriptStatement : StatementsSplitter.splitStatements(script)) {
-            LOGGER.debug("Executing: " + scriptStatement);
+            LOGGER.info("Executing: " + scriptStatement);
             statement.execute(scriptStatement);
         }
     }
