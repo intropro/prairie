@@ -34,7 +34,7 @@ public abstract class BaseUnit implements Unit {
 
     static {
         try {
-            GLOBAL_TMP_DIR = Files.createDirectories(Paths.get(System.getProperty("java.io.tmpdir"), "but"));
+            GLOBAL_TMP_DIR = Files.createDirectories(Paths.get(System.getProperty("java.io.tmpdir"), "prairie"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

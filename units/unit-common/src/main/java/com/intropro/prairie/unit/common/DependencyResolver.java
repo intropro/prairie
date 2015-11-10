@@ -18,6 +18,7 @@ import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,17 +36,17 @@ public class DependencyResolver {
     public void resolve(Object object) throws BigDataTestFrameworkException {
         for (Field field : object.getClass().getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !bigDataUnit.global()) {
+            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, object);
             }
         }
     }
 
-    public void resolveStatic(Object object) throws BigDataTestFrameworkException {
-        for (Field field : object.getClass().getDeclaredFields()) {
+    public void resolveStatic(Class clazz) throws BigDataTestFrameworkException {
+        for (Field field : clazz.getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && bigDataUnit.global()) {
-                resolveDependency(field, object);
+            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
+                resolveDependency(field, clazz);
             }
         }
     }
@@ -65,24 +66,24 @@ public class DependencyResolver {
     public void destroy(Object object) throws DestroyUnitException {
         for (Field field : object.getClass().getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !bigDataUnit.global()) {
+            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 dependencies.get(field.getType()).remove(object);
             }
         }
-        garbadgeCollector();
+        garbageCollector();
     }
 
-    public void destroyStatic(Object object) throws DestroyUnitException {
-        for (Field field : object.getClass().getDeclaredFields()) {
+    public void destroyStatic(Class clazz) throws DestroyUnitException {
+        for (Field field : clazz.getClass().getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && bigDataUnit.global()) {
-                dependencies.get(field.getType()).remove(object);
+            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
+                dependencies.get(field.getType()).remove(clazz);
             }
         }
-        garbadgeCollector();
+        garbageCollector();
     }
 
-    private void garbadgeCollector() throws DestroyUnitException {
+    private void garbageCollector() throws DestroyUnitException {
         boolean destroyAtLeastOne = true;
         while (destroyAtLeastOne) {
             destroyAtLeastOne = false;
