@@ -1,15 +1,14 @@
 package com.intropro.prairie.unit.oozie;
 
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.comparator.EntryComparator;
-import com.intropro.prairie.unit.hdfs.HdfsUnit;
-import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
+import com.intropro.prairie.junit.BigDataTestRunner;
+import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import org.apache.commons.io.IOUtils;
@@ -57,11 +56,6 @@ public class OozieUnitTest {
 
     private String workflowPath;
 
-    private String mapredInput;
-    private String mapredOutput;
-
-    private String hiveOutput;
-
     @Test
     public void testOozie() throws Exception {
         Properties properties = new Properties();
@@ -69,39 +63,33 @@ public class OozieUnitTest {
         properties.setProperty("nameNode", hdfsUnit.getFileSystem().getUri().toString());
         properties.setProperty("jobTracker", yarnUnit.getConfig().get(YarnConfiguration.RM_ADDRESS));
         workflowPath = properties.getProperty("appPath");
-        mapredInput = properties.getProperty("mapredInput");
-        mapredOutput = properties.getProperty("mapredOutput");
-        hiveOutput = properties.getProperty("TEST_TABLE1_2_LOC");
-        deployWorkflow();
-        prepareMapredAction();
-        properties.putAll(prepareHiveAction());
+
+        deployWorkflow(properties);
+        prepareMapredAction(properties);
+        prepareHiveAction(properties);
+        preparePigAction(properties);
+
         OozieJob oozieJob = oozieUnit.run(properties);
         oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(5));
         Assert.assertEquals(WorkflowJob.Status.SUCCEEDED, oozieJob.getWorkflowJob().getStatus());
-        //Check java action
-        Assert.assertEquals("Java; Unexpected result", properties.getProperty("text"), IOUtils.toString(new FileReader(properties.getProperty("outFile"))));
-        //Check mapred action
-        List<String> exprectedMapredOutput = IOUtils.readLines(OozieUnitTest.class.getClassLoader().getResourceAsStream("mapred-action/output"));
-        List<String> resultMapredOutput = new ArrayList<>();
-        for (FileStatus fileStatus : hdfsUnit.getFileSystem().listStatus(new Path(mapredOutput))) {
-            FSDataInputStream mapredInputStream = hdfsUnit.getFileSystem().open(fileStatus.getPath());
-            resultMapredOutput.addAll(IOUtils.readLines(mapredInputStream));
-            mapredInputStream.close();
-        }
-        CompareResponse compareResponse = byLineComparator.compare(exprectedMapredOutput, resultMapredOutput);
-        Assert.assertTrue("Mapred; Unexpected lines: " + compareResponse.getUnexpected(), compareResponse.getUnexpected().isEmpty());
-        Assert.assertTrue("Mapred; Missed lines: " + compareResponse.getMissed(), compareResponse.getMissed().isEmpty());
-        //Check hive action
-        List<Map<String, String>> hiveActionResult = hiveUnit.executeQuery("select * from test_table1_2");
-        InputFormatReader<Map<String, String>> reader = new SvFormat(',').createReader(OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/output.csv"));
-        List<Map<String, String>> exprectedHiveOutput = reader.all();
-        reader.close();
-        CompareResponse hiveCompareResponse = mapComparator.compare(exprectedHiveOutput, hiveActionResult);
-        Assert.assertTrue("Hive; Unexpected lines: " + hiveCompareResponse.getUnexpected(), hiveCompareResponse.getUnexpected().isEmpty());
-        Assert.assertTrue("Hive; Missed lines: " + hiveCompareResponse.getMissed(), hiveCompareResponse.getMissed().isEmpty());
+
+        checkJavaAction(properties);
+        checkMapredAction(properties);
+        checkHive2Action(properties);
+        checkPigAction(properties);
     }
 
-    private void prepareMapredAction() throws IOException {
+    private void deployWorkflow(Properties properties) throws IOException {
+        hdfsUnit.getFileSystem().mkdirs(new Path(workflowPath));
+        FSDataOutputStream dataOutputStream =
+                hdfsUnit.getFileSystem().create(new Path(workflowPath, "workflow.xml"));
+        IOUtils.copy(OozieUnitTest.class.getClassLoader().getResourceAsStream("workflow.xml"), dataOutputStream);
+        dataOutputStream.close();
+    }
+
+    private void prepareMapredAction(Properties properties) throws IOException {
+        String mapredInput = properties.getProperty("mapredInput");
+        String mapredOutput = properties.getProperty("mapredOutput");
         hdfsUnit.getFileSystem().mkdirs(new Path(mapredInput));
         FSDataOutputStream fsDataOutputStream = hdfsUnit.getFileSystem().create(new Path(mapredInput, "input"));
         IOUtils.copy(OozieUnitTest.class.getClassLoader().getResourceAsStream("mapred-action/input"), fsDataOutputStream);
@@ -110,7 +98,7 @@ public class OozieUnitTest {
         hdfsUnit.getFileSystem().setOwner(new Path(mapredOutput).getParent(), "oozie", "oozie");
     }
 
-    private Properties prepareHiveAction() throws IOException, SQLException {
+    private void prepareHiveAction(Properties properties) throws IOException, SQLException {
         FSDataOutputStream scriptOutputStream =
                 hdfsUnit.getFileSystem().create(new Path(workflowPath, "hive2-action/hive-action-query.hql"));
         InputStream scriptInputStream = OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/hive-action-query.hql");
@@ -140,21 +128,55 @@ public class OozieUnitTest {
         FSDataOutputStream hiveConfOutStr = hdfsUnit.getFileSystem().create(hiveDefaultPath);
         hiveConf.writeXml(hiveConfOutStr);
         hiveConfOutStr.close();
-        Properties properties = new Properties();
         properties.setProperty("HIVE_DEFAULTS", hiveDefaultPath.toString());
         properties.setProperty("HIVE_JDBC_URL", hiveUnit.getJdbcUrl());
         properties.setProperty("TEST_TABLE1_LOC", testTable1Loc.toString());
         properties.setProperty("TEST_TABLE2_LOC", testTable2Loc.toString());
         properties.setProperty("TEST_TABLE1_2_LOC", outDir.toString());
-        return properties;
     }
 
-    private void deployWorkflow() throws IOException {
-        hdfsUnit.getFileSystem().mkdirs(new Path(workflowPath));
-        FSDataOutputStream dataOutputStream =
-                hdfsUnit.getFileSystem().create(new Path(workflowPath, "workflow.xml"));
-        IOUtils.copy(OozieUnitTest.class.getClassLoader().getResourceAsStream("workflow.xml"), dataOutputStream);
-        dataOutputStream.close();
+    private void preparePigAction(Properties properties) throws IOException {
+        hdfsUnit.getFileSystem().mkdirs(new Path(properties.getProperty("pigOutput")).getParent());
+        hdfsUnit.getFileSystem().setOwner(new Path(properties.getProperty("pigOutput")).getParent(), "oozie", "oozie");
+        hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("pig-action/pig-action.pig"),
+                new Path(workflowPath, "pig-action.pig").toString(), new TextFormat(), new TextFormat());
+        hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("pig-action/input.csv"),
+                properties.getProperty("pigInput"), new TextFormat(), new TextFormat());
+        properties.setProperty("INPUT_PATH", "hdfs://" + hdfsUnit.getNamenode() + properties.getProperty("pigInput"));
+        properties.setProperty("OUTPUT_PATH", "hdfs://" + hdfsUnit.getNamenode() + properties.getProperty("pigOutput"));
+    }
+
+    private void checkJavaAction(Properties properties) throws IOException {
+        Assert.assertEquals("Java; Unexpected result", properties.getProperty("text"),
+                IOUtils.toString(new FileReader(properties.getProperty("outFile"))));
+    }
+
+    private void checkMapredAction(Properties properties) throws IOException {
+        String mapredOutput = properties.getProperty("mapredOutput");
+        List<String> exprectedMapredOutput = IOUtils.readLines(
+                OozieUnitTest.class.getClassLoader().getResourceAsStream("mapred-action/output"));
+        List<String> resultMapredOutput = new ArrayList<>();
+        for (FileStatus fileStatus : hdfsUnit.getFileSystem().listStatus(new Path(mapredOutput))) {
+            FSDataInputStream mapredInputStream = hdfsUnit.getFileSystem().open(fileStatus.getPath());
+            resultMapredOutput.addAll(IOUtils.readLines(mapredInputStream));
+            mapredInputStream.close();
+        }
+        CompareResponse compareResponse = byLineComparator.compare(exprectedMapredOutput, resultMapredOutput);
+        Assert.assertTrue("Mapred; Unexpected lines: " + compareResponse.getUnexpected(),
+                compareResponse.getUnexpected().isEmpty());
+        Assert.assertTrue("Mapred; Missed lines: " + compareResponse.getMissed(),
+                compareResponse.getMissed().isEmpty());
+    }
+
+    private void checkHive2Action(Properties properties) throws SQLException, IOException {
+        hiveUnit.compare("select * from test_table1_2",
+                OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/output.csv"),
+                new SvFormat(',')).assertEquals();
+    }
+
+    private void checkPigAction(Properties properties) throws IOException {
+        hdfsUnit.compare(new Path(properties.getProperty("pigOutput")), new TextFormat(),
+                "pig-action/output.csv", new TextFormat());
     }
 
 }

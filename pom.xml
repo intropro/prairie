@@ -227,6 +227,16 @@
                 <version>${oozie.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.oozie</groupId>
+                <artifactId>oozie-sharelib-hive2</artifactId>
+                <version>${oozie.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.oozie</groupId>
+                <artifactId>oozie-sharelib-pig</artifactId>
+                <version>${oozie.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec-commons-codec.version}</version>

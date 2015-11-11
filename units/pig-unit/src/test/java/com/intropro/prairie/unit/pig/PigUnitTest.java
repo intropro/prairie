@@ -33,6 +33,6 @@ public class PigUnitTest {
         placeholders.put("INPUT_PATH", "/data/input");
         placeholders.put("OUTPUT_PATH", "/data/output");
         pigUnit.run(script, placeholders);
-        hdfsUnit.compare(new Path("/data/output"), new TextFormat(), "output.csv", new TextFormat());
+        hdfsUnit.compare(new Path("/data/output"), new TextFormat(), "output.csv", new TextFormat()).assertEquals();
     }
 }

@@ -14,8 +14,8 @@
 package com.intropro.prairie.unit.yarn;
 
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
+import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.hadoop.conf.Configuration;
@@ -33,7 +33,7 @@ import java.io.IOException;
  */
 public class YarnUnit extends HadoopUnit {
 
-    private static final String NAME = "bigdata-test-framework-yarn";
+    private static final String NAME = "prairie-yarn";
 
     private MiniMRYarnCluster miniMR;
 

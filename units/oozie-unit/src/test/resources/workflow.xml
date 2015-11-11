@@ -77,6 +77,25 @@
             <param>TEST_TABLE1_2_LOC=${TEST_TABLE1_2_LOC}</param>
             <file>hive2-action/hive-action-query.hql</file>
         </hive2>
+        <ok to="pig-action"/>
+        <error to="fail"/>
+    </action>
+    <action name="pig-action">
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>exectype</name>
+                    <value>LOCAL</value>
+                </property>
+            </configuration>
+            <script>pig-action.pig</script>
+            <argument>-param</argument>
+            <argument>INPUT_PATH=${INPUT_PATH}</argument>
+            <argument>-param</argument>
+            <argument>OUTPUT_PATH=${OUTPUT_PATH}</argument>
+        </pig>
         <ok to="end"/>
         <error to="fail"/>
     </action>
