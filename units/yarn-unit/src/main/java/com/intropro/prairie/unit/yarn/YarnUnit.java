@@ -58,7 +58,7 @@ public class YarnUnit extends HadoopUnit {
         bootConf.set("hadoop.proxyuser." + user + ".groups", "*");
         bootConf.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
         bootConf.addResource("yarn-site.xml");
-        miniMR = new MiniMRYarnCluster(NAME, 1);
+        miniMR = new MiniMRYarnCluster(NAME);
         miniMR.init(bootConf);
         miniMR.start();
     }

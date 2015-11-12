@@ -14,10 +14,10 @@
 package com.intropro.prairie.unit.oozie;
 
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.exception.DestroyUnitException;
+import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
-import com.intropro.prairie.unit.common.exception.InitUnitException;
-import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -64,6 +64,8 @@ public class OozieUnit extends HadoopUnit {
         dataDir.mkdirs();
         actionConfDir = new File(getTmpDir().toFile(), "action-conf");
         actionConfDir.mkdirs();
+
+        System.setProperty("derby.stream.error.file", new File(getTmpDir().toFile(), "derby.log").getAbsolutePath());
 
         try {
             hdfsUnit.getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/oozie"));

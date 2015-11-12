@@ -2,9 +2,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,12 @@ import com.intropro.prairie.unit.common.exception.InitUnitException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by presidentio on 9/18/15.
@@ -46,6 +48,7 @@ public abstract class BaseUnit implements Unit {
 
     public BaseUnit(String unitName) {
         this.unitName = unitName;
+        clearOldDTmpDirectories();
         try {
             tmpDir = Files.createTempDirectory(GLOBAL_TMP_DIR, unitName);
         } catch (IOException e) {
@@ -65,27 +68,47 @@ public abstract class BaseUnit implements Unit {
     }
 
     @Override
-    public void stop() throws DestroyUnitException {
+    public final void stop() throws DestroyUnitException {
         LOGGER.info(String.format("Destroying %s unit", unitName));
         destroy();
         try {
-            Files.walkFileTree(tmpDir, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return super.visitFile(file, attrs);
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return super.postVisitDirectory(dir, exc);
-                }
-            });
+            clearTmpDirectory(tmpDir);
         } catch (IOException e) {
             throw new DestroyUnitException("Failed to delete tmp dir: " + tmpDir, e);
         }
         LOGGER.info(String.format("Unit %s destroyed", unitName));
+    }
+
+    private void clearTmpDirectory(Path directory) throws IOException {
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return super.postVisitDirectory(dir, exc);
+            }
+        });
+    }
+
+    private void clearOldDTmpDirectories() {
+        File[] oldDirs = GLOBAL_TMP_DIR.toFile().listFiles();
+        if (oldDirs != null) {
+            for (File oldDir : oldDirs) {
+                if (oldDir.lastModified() < System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)
+                        && !oldDir.isHidden() && oldDir.isDirectory()) {
+                    try {
+                        clearTmpDirectory(oldDir.toPath());
+                    } catch (IOException e) {
+                        LOGGER.warn("Can't delete old directory: " + oldDir, e);
+                    }
+                }
+            }
+        }
     }
 
     public String getUnitName() {
