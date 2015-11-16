@@ -32,10 +32,14 @@ public class CommandsServer extends Thread implements CommandProvider {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            while (!isInterrupted()) {
-                Socket socket = serverSocket.accept();
-                CommandProcessor commandProcessor = new CommandProcessor(socket, this);
-                commandProcessor.start();
+            try {
+                while (!isInterrupted()) {
+                    Socket socket = serverSocket.accept();
+                    CommandProcessor commandProcessor = new CommandProcessor(socket, this);
+                    commandProcessor.start();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Server socket error", e);
             }
             for (CommandProcessor commandProcessor : commandProcessors) {
                 commandProcessor.interrupt();

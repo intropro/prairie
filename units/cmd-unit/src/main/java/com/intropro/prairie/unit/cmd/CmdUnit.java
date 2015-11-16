@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by presidentio on 11/13/15.
@@ -39,6 +38,7 @@ public class CmdUnit extends BaseUnit {
         commandsServer = new CommandsServer(port);
         commandsServer.start();
         try {
+            path = getTmpDir().toAbsolutePath().toString();
             deployProxyCommand();
             mockCommand = IOUtils.toString(CmdUnit.class.getClassLoader().getResourceAsStream("mock.sh"));
         } catch (IOException e) {
@@ -52,16 +52,12 @@ public class CmdUnit extends BaseUnit {
     }
 
     public String declare(String alias, Command command) throws IOException {
-        if (!path.isEmpty()) {
-            path += PATH_SEPARATOR;
-        }
-        path += deployCommand(alias, command);
-        return path;
+        return deployCommand(alias, command);
     }
 
     private String deployCommand(String alias, Command command) throws IOException {
         commandsServer.addCommand(alias, command);
-        String commandBody = String.format(mockCommand, proxyCommandPath, alias);
+        String commandBody = String.format(mockCommand, proxyCommandPath, command.useInputStream(), alias);
         File commandFile = new File(getTmpDir().toFile(), alias);
         FileWriter commandFileWriter = new FileWriter(commandFile);
         commandFileWriter.write(commandBody);
@@ -81,11 +77,7 @@ public class CmdUnit extends BaseUnit {
         proxyCommandFile.setExecutable(true);
     }
 
-    public static void main(String[] args) throws InitUnitException, InterruptedException, DestroyUnitException, IOException {
-        CmdUnit cmdUnit = new CmdUnit();
-        cmdUnit.start();
-        cmdUnit.declare("a.sh", new MirrorCommand());
-        Thread.sleep(TimeUnit.MINUTES.toMillis(10));
-        cmdUnit.stop();
+    public String getPath() {
+        return path;
     }
 }

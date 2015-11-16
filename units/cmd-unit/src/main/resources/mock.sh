@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
-%s %s $@
+#!/bin/bash
+%s %s %s $@

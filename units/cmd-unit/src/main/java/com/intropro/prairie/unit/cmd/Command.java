@@ -12,4 +12,6 @@ public interface Command {
 
     int exec(List<String> args, Reader in, Writer out) throws InterruptedException, IOException;
 
+    boolean useInputStream();
+
 }

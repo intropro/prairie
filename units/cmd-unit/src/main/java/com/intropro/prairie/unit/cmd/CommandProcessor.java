@@ -43,10 +43,13 @@ public class CommandProcessor extends Thread {
             LOGGER.info("Command started: " + args);
             Command command = commandProvider.getCommand(alias);
             try {
-                command.exec(args.subList(1, args.size()), bufferedReader, printWriter);
+                int status = command.exec(args.subList(1, args.size()), bufferedReader, printWriter);
+                printWriter.write("" + status);
+                printWriter.flush();
             } catch (InterruptedException e) {
                 LOGGER.warn("Command " + command + " interrupted");
             }
+            bufferedReader.close();
             printWriter.close();
             socket.close();
             LOGGER.info("Command finished: " + alias);
