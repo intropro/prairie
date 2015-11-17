@@ -7,6 +7,7 @@ import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
 import com.intropro.prairie.junit.BigDataTestRunner;
+import com.intropro.prairie.unit.cmd.CmdUnit;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
@@ -51,10 +52,15 @@ public class OozieUnitTest {
     @BigDataUnit
     private Hive2Unit hiveUnit;
 
+    @BigDataUnit
+    private CmdUnit cmdUnit;
+
     private EntryComparator<String> byLineComparator = new ByLineComparator<>();
     private EntryComparator<Map<String, String>> mapComparator = new ByLineComparator<>();
 
     private String workflowPath;
+
+    private SaveArgsCommand command;
 
     @Test
     public void testOozie() throws Exception {
@@ -68,6 +74,7 @@ public class OozieUnitTest {
         prepareMapredAction(properties);
         prepareHiveAction(properties);
         preparePigAction(properties);
+        prepareShellAction(properties);
 
         OozieJob oozieJob = oozieUnit.run(properties);
         oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(5));
@@ -77,6 +84,7 @@ public class OozieUnitTest {
         checkMapredAction(properties);
         checkHive2Action(properties);
         checkPigAction(properties);
+        checkShellAction(properties);
     }
 
     private void deployWorkflow(Properties properties) throws IOException {
@@ -146,6 +154,12 @@ public class OozieUnitTest {
         properties.setProperty("OUTPUT_PATH", "hdfs://" + hdfsUnit.getNamenode() + properties.getProperty("pigOutput"));
     }
 
+    private void prepareShellAction(Properties properties) throws IOException {
+        command = new SaveArgsCommand();
+        cmdUnit.declare("test-command", command);
+
+    }
+
     private void checkJavaAction(Properties properties) throws IOException {
         Assert.assertEquals("Java; Unexpected result", properties.getProperty("text"),
                 IOUtils.toString(new FileReader(properties.getProperty("outFile"))));
@@ -177,6 +191,13 @@ public class OozieUnitTest {
     private void checkPigAction(Properties properties) throws IOException {
         hdfsUnit.compare(new Path(properties.getProperty("pigOutput")), new TextFormat(),
                 "pig-action/output.csv", new TextFormat());
+    }
+
+    private void checkShellAction(Properties properties) {
+        Assert.assertNotNull(command.getArgs());
+        Assert.assertEquals(2, command.getArgs().size());
+        Assert.assertTrue(command.getArgs().contains("firstArgument"));
+        Assert.assertTrue(command.getArgs().contains("secondArgument"));
     }
 
 }

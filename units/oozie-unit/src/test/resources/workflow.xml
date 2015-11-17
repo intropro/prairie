@@ -96,6 +96,17 @@
             <argument>-param</argument>
             <argument>OUTPUT_PATH=${OUTPUT_PATH}</argument>
         </pig>
+        <ok to="shell-action"/>
+        <error to="fail"/>
+    </action>
+    <action name="shell-action">
+        <shell xmlns="uri:oozie:shell-action:0.3">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>test-command</exec>
+            <argument>firstArgument</argument>
+            <argument>secondArgument</argument>
+        </shell>
         <ok to="end"/>
         <error to="fail"/>
     </action>

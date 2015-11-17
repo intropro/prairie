@@ -22,7 +22,7 @@ public class CmdUnitTest {
 
     private String alias = "cmd-unit-test";
 
-    private String inputData = "123456asdfg\nzxcvvbn\n123445567\n";
+    private String inputData = "123456asdfg\nzxcvvbn\n123445567";
 
     private List<String> args = Arrays.asList("1", "2", "a", "asdfqwf", "eg44gg44g");
 

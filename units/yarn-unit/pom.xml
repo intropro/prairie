@@ -22,6 +22,10 @@
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
+            <artifactId>cmd-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
         </dependency>
 

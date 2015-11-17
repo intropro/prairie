@@ -28,6 +28,7 @@ import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.service.*;
 import org.apache.oozie.servlet.CallbackServlet;
 import org.apache.oozie.test.EmbeddedServletContainer;
+import org.apache.oozie.util.XConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,8 +98,9 @@ public class OozieUnit extends HadoopUnit {
             services.getConf().set(JPAService.CONF_CREATE_DB_SCHEMA, "true");
             services.getConf().set("mapred.job.tracker", YarnConfiguration.RM_ADDRESS);
             services.getConf().set("mapreduce.framework.name", "yarn");
-            services.getConf().addResource(yarnUnit.getConfig());
-            services.getConf().addResource(hdfsUnit.getFileSystem().getConf());
+            XConfiguration.copy(createConfig(), services.getConf());
+            XConfiguration.copy(yarnUnit.getConfig(), services.getConf());
+            XConfiguration.copy(hdfsUnit.getFileSystem().getConf(), services.getConf());
             String classes = services.getConf().get(Services.CONF_SERVICE_CLASSES);
             services.getConf().set(Services.CONF_SERVICE_CLASSES, classes.replaceAll("org.apache.oozie.service.ShareLibService,", ""));
             services.init();

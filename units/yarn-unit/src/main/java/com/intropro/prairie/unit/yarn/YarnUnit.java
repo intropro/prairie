@@ -13,6 +13,7 @@
  */
 package com.intropro.prairie.unit.yarn;
 
+import com.intropro.prairie.unit.cmd.CmdUnit;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -40,15 +41,18 @@ public class YarnUnit extends HadoopUnit {
     @BigDataUnit
     private HdfsUnit hdfsUnit;
 
+    @BigDataUnit
+    private CmdUnit cmdUnit;
+
     public YarnUnit() {
         super("yarn");
     }
 
     @Override
     public void init() throws InitUnitException {
-        YarnConfiguration bootConf;
+        YarnConfiguration bootConf = new YarnConfiguration(createConfig());
         try {
-            bootConf = new YarnConfiguration(hdfsUnit.getFileSystem().getConf());
+            bootConf.addResource(hdfsUnit.getFileSystem().getConf());
         } catch (IOException e) {
             throw new InitUnitException("Failed to get file system", e);
         }
@@ -56,6 +60,7 @@ public class YarnUnit extends HadoopUnit {
         String user = System.getProperty("user.name");
         bootConf.set("hadoop.proxyuser." + user + ".hosts", "*");
         bootConf.set("hadoop.proxyuser." + user + ".groups", "*");
+        bootConf.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
         bootConf.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
         bootConf.addResource("yarn-site.xml");
         miniMR = new MiniMRYarnCluster(NAME);

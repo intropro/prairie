@@ -20,6 +20,7 @@ public class CommandProcessor extends Thread {
 
     private static final Logger LOGGER = LogManager.getLogger(CommandProcessor.class);
     private static final Pattern ARGS_PATTERN = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+    private static final String FIRST_LINE_MARKER = "---this is the first line marker for prairie---";
 
     private Socket socket;
 
@@ -43,8 +44,9 @@ public class CommandProcessor extends Thread {
             LOGGER.info("Command started: " + args);
             Command command = commandProvider.getCommand(alias);
             try {
+                printWriter.write(FIRST_LINE_MARKER);
                 int status = command.exec(args.subList(1, args.size()), bufferedReader, printWriter);
-                printWriter.write("" + status);
+                printWriter.write("\n" + status);
                 printWriter.flush();
             } catch (InterruptedException e) {
                 LOGGER.warn("Command " + command + " interrupted");

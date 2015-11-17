@@ -15,11 +15,14 @@ public class MirrorCommand implements Command {
     public int exec(List<String> args, Reader in, Writer out) throws InterruptedException, IOException {
         BufferedReader bufferedReader = new BufferedReader(in);
         String line;
+        boolean first = true;
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line);
+            if(!first){
+                out.write("\n");
+            }
             out.write(line);
-            out.write("\n");
             out.flush();
+            first = false;
         }
         return 125;
     }
