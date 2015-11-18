@@ -19,21 +19,30 @@ public class ConstSource extends AbstractSource implements Configurable, Pollabl
 
     private Queue<String> queue;
 
+    private ConstSourceCounter sourceCounter;
 
     @Override
     public void configure(Context context) {
         String items = context.getString("items");
         queue = new LinkedList<>();
         queue.addAll(Arrays.asList(items.split(",")));
+        if (sourceCounter == null) {
+            sourceCounter = new ConstSourceCounter(getName());
+        }
     }
 
     @Override
     public void start() {
+        sourceCounter.start();
+        sourceCounter.incrementCustom();
+        super.start();
     }
 
 
     @Override
     public void stop() {
+        sourceCounter.stop();
+        super.stop();
     }
 
     @Override
@@ -46,7 +55,6 @@ public class ConstSource extends AbstractSource implements Configurable, Pollabl
         }
         Event event = EventBuilder.withBody(msg.getBytes());
         getChannelProcessor().processEvent(event);
-
         return status;
 
     }

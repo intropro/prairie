@@ -46,9 +46,18 @@ public class FlumeUnitTest {
                 return flumeAgent.getSink("sink").processedEventCount() == events.length;
             }
         }).await();
-        Assert.assertEquals("Unexpected event count processed", events.length, flumeAgent.getSink("sink").processedEventCount());
+        new Waiter(5000, new EventChecker() {
+            @Override
+            public boolean check() {
+                String value = flumeAgent.getSource("source").getMetric(ConstSourceCounter.CUSTOM_COUNTER);
+                return value != null && Integer.valueOf(value) == events.length;
+            }
+        }).await();
         flumeAgent.close();
+        Assert.assertEquals("Unexpected event count processed", events.length, flumeAgent.getSink("sink").processedEventCount());
+        Assert.assertEquals("1", flumeAgent.getSource("source").getMetric("Custom"));
         List<String> resultLines = FileUtils.readLineInDirectory(outputFolder);
         byLineComparator.compare(Arrays.asList(events), resultLines).assertEquals();
     }
+
 }

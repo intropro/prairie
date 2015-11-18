@@ -13,23 +13,21 @@
  */
 package com.intropro.prairie.unit.flume;
 
-import org.apache.flume.instrumentation.util.JMXPollUtil;
+import org.apache.flume.instrumentation.MonitoredCounterGroup;
 
 /**
  * Created by presidentio on 10/14/15.
  */
-public class Sink {
+public class Sink extends FlumeComponent {
 
     private static final String EVENT_DRAIN_SUCCESS_COUNT = "EventDrainSuccessCount";
 
-    private String name;
-
     public Sink(String name) {
-        this.name = name;
+        super(MonitoredCounterGroup.Type.SINK.name() + "." + name);
     }
 
     public int processedEventCount(){
-        String eventCount = JMXPollUtil.getAllMBeans().get("SINK." + name).get(EVENT_DRAIN_SUCCESS_COUNT);
+        String eventCount = getMetric(EVENT_DRAIN_SUCCESS_COUNT);
         return eventCount == null ? 0 : Integer.valueOf(eventCount);
     }
 }

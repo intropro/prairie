@@ -13,14 +13,14 @@
  */
 package com.intropro.prairie.unit.flume;
 
+import org.apache.flume.instrumentation.MonitoredCounterGroup;
+
 /**
  * Created by presidentio on 10/14/15.
  */
-public class Source {
-
-    private String name;
+public class Source extends FlumeComponent {
 
     public Source(String name) {
-        this.name = name;
+        super(MonitoredCounterGroup.Type.SOURCE.name() + "." + name);
     }
 }
