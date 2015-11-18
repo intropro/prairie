@@ -24,17 +24,6 @@
             <groupId>com.intropro.prairie</groupId>
             <artifactId>format</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-minicluster</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 
