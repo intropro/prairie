@@ -52,6 +52,8 @@ public class OozieUnit extends HadoopUnit {
 
     private org.apache.oozie.client.OozieClient oozieClient;
 
+    private String user = System.getProperty("user.name");
+
     public OozieUnit() {
         super("oozie");
     }
@@ -68,8 +70,8 @@ public class OozieUnit extends HadoopUnit {
         System.setProperty("derby.stream.error.file", new File(getTmpDir().toFile(), "derby.log").getAbsolutePath());
 
         try {
-            hdfsUnit.getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/oozie"));
-            hdfsUnit.getFileSystem().setOwner(new org.apache.hadoop.fs.Path("/user/oozie"), "oozie", "oozie");
+            hdfsUnit.getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/", user));
+            hdfsUnit.getFileSystem().setOwner(new org.apache.hadoop.fs.Path("/user/", user), user, user);
         } catch (IOException e) {
             throw new InitUnitException("Failed on hdfs directories initialization", e);
         }
@@ -139,12 +141,12 @@ public class OozieUnit extends HadoopUnit {
     }
 
     public org.apache.oozie.client.OozieClient getClient() {
-        DagEngine dagEngine = Services.get().get(DagEngineService.class).getDagEngine("oozie");
+        DagEngine dagEngine = Services.get().get(DagEngineService.class).getDagEngine(user);
         return new LocalOozieClient(dagEngine);
     }
 
     public OozieJob run(Properties properties) throws OozieClientException {
-        properties.setProperty(org.apache.oozie.client.OozieClient.USER_NAME, "oozie");
+        properties.setProperty(org.apache.oozie.client.OozieClient.USER_NAME, user);
         return new OozieJob(oozieClient.run(properties), oozieClient);
     }
 

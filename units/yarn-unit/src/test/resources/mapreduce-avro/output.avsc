@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "PrairieYarnAvroTestOutput",
+  "namespace": "com.intropro.prairie",
+  "fields": [
+    {
+      "name": "field_sum",
+      "type": "string"
+    }
+  ]
+}
