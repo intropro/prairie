@@ -179,6 +179,11 @@
                 <artifactId>kafka-unit</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.intropro.prairie</groupId>
+                <artifactId>cmd-unit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.hadoop</groupId>

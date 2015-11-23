@@ -22,6 +22,7 @@
         <module>zookeeper-unit</module>
         <module>kafka-unit</module>
         <module>pig-unit</module>
+        <module>cmd-unit</module>
     </modules>
 
 

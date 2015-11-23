@@ -31,6 +31,7 @@ public abstract class HadoopUnit extends BaseUnit {
 
     protected Configuration createConfig() {
         Configuration conf = new Configuration();
+        conf.addResource("prairie-site.xml");
         conf.set("hadoop.tmp.dir", getTmpDir().toString());
         return conf;
     }
