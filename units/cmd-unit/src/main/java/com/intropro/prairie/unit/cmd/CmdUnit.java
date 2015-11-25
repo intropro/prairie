@@ -38,6 +38,11 @@ public class CmdUnit extends BaseUnit {
         commandsServer = new CommandsServer(port);
         commandsServer.start();
         try {
+            commandsServer.waitStart();
+        } catch (InterruptedException e) {
+            throw new InitUnitException("Failed to start command server", e);
+        }
+        try {
             path = getTmpDir().toAbsolutePath().toString();
             deployProxyCommand();
             mockCommand = IOUtils.toString(CmdUnit.class.getClassLoader().getResourceAsStream("mock.sh"));

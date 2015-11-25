@@ -24,14 +24,22 @@ public class CommandsServer extends Thread implements CommandProvider {
 
     private List<CommandProcessor> commandProcessors = new ArrayList<>();
 
+    private ServerSocket serverSocket;
+
     public CommandsServer(int port) {
         this.port = port;
+    }
+
+    public void waitStart() throws InterruptedException {
+        while (serverSocket == null || !serverSocket.isBound()) {
+            Thread.sleep(10);
+        }
     }
 
     @Override
     public void run() {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
             try {
                 while (!isInterrupted()) {
                     Socket socket = serverSocket.accept();
