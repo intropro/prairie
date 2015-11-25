@@ -5,7 +5,7 @@ if $1 ; then
     { echo ${@:2} ; cat - ; }
 else
     echo ${@:2}
-fi  | nc ${host} ${port} | {
+fi  | nc ${host} ${port} -q 0 | {
     while read line; do
         if [ "${line:0:47}" == "---this is the first line marker for prairie---" ]; then
             printf "%%s" "${line:47}"
