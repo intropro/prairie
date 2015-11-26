@@ -20,7 +20,7 @@ public class CommandProcessor extends Thread {
 
     private static final Logger LOGGER = LogManager.getLogger(CommandProcessor.class);
     private static final Pattern ARGS_PATTERN = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-    private static final String FIRST_LINE_MARKER = "---this is the first line marker for prairie---";
+    public static final String FIRST_LINE_MARKER = "---this is the first line marker for prairie---";
 
     private Socket socket;
 
@@ -36,25 +36,21 @@ public class CommandProcessor extends Thread {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            String alias = bufferedReader.readLine();
             List<String> args = parseArgs(bufferedReader.readLine());
-            if (args.size() < 1) {
-                throw new IllegalArgumentException("Argument line must contains at least command alias");
-            }
-            String alias = args.get(0);
-            LOGGER.info("Command started: " + args);
+            LOGGER.info("Command started [" + alias + "] with args: " + args);
             Command command = commandProvider.getCommand(alias);
+            int status = 0;
             try {
                 printWriter.write(FIRST_LINE_MARKER);
-                int status = command.exec(args.subList(1, args.size()), bufferedReader, printWriter);
+                status = command.exec(args, bufferedReader, printWriter);
                 printWriter.write("\n" + status);
                 printWriter.flush();
             } catch (InterruptedException e) {
                 LOGGER.warn("Command " + command + " interrupted");
             }
-            bufferedReader.close();
-            printWriter.close();
             socket.close();
-            LOGGER.info("Command finished: " + alias);
+            LOGGER.info("Command finished [" + alias + "] with status " + status);
         } catch (IOException e) {
             LOGGER.error("Client socket error", e);
         }

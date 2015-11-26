@@ -31,10 +31,12 @@ public class CmdUnitTest {
         String path = cmdUnit.declare(alias, new MirrorCommand());
         ProcessBuilder processBuilder = new ProcessBuilder(path);
         Process process = processBuilder.start();
+        new StreamRedirect(process.getErrorStream(), System.err).start();
         process.getOutputStream().write(inputData.getBytes());
         process.getOutputStream().close();
         int exitStatus = process.waitFor();
         String result = IOUtils.toString(process.getInputStream());
+        Thread.sleep(2000);
         Assert.assertEquals(inputData, result);
         Assert.assertEquals(125, exitStatus);
     }
@@ -49,6 +51,7 @@ public class CmdUnitTest {
         command.addAll(args);
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         Process process = processBuilder.start();
+        new StreamRedirect(process.getErrorStream(), System.err).start();
         int exitStatus = process.waitFor();
         Assert.assertEquals(args, saveArgsCommand.getArgs());
         Assert.assertEquals(statusCode, exitStatus);

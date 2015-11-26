@@ -2,16 +2,7 @@
 host=%s
 port=%d
 if $1 ; then
-    { echo ${@:2} ; cat - ; }
+    cat -
 else
-    echo ${@:2}
-fi  | nc ${host} ${port} -q 0 | {
-    while read line; do
-        if [ "${line:0:47}" == "---this is the first line marker for prairie---" ]; then
-            printf "%%s" "${line:47}"
-        else
-            printf "\n%%s" "${line}"
-        fi
-    done
-    exit ${line};
-}
+    echo ''
+fi | java -cp %s com.intropro.prairie.unit.cmd.CommandClient -h ${host} -p ${port} -c $2 ${@:3}

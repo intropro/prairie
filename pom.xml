@@ -87,6 +87,8 @@
         <org.apache.logging.log4j-log4j-core.version>2.4</org.apache.logging.log4j-log4j-core.version>
         <org.codehaus.jackson-jackson-core-asl.version>1.9.1</org.codehaus.jackson-jackson-core-asl.version>
         <org.codehaus.jackson-jackson-mapper-asl.version>1.9.1</org.codehaus.jackson-jackson-mapper-asl.version>
+        <com.beust-jcommander.version>1.48</com.beust-jcommander.version>
+        <commons-lang.version>2.6</commons-lang.version>
 
         <junit-junit.version>4.12</junit-junit.version>
         <org.openjdk.jmh.version>1.11.1</org.openjdk.jmh.version>
@@ -303,6 +305,16 @@
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-generator-annprocess</artifactId>
                 <version>${org.openjdk.jmh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.beust</groupId>
+                <artifactId>jcommander</artifactId>
+                <version>${com.beust-jcommander.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
             </dependency>
 
             <dependency>

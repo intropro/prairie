@@ -28,8 +28,12 @@ public class CmdUnit extends BaseUnit {
 
     private String proxyCommandPath;
 
+    private File userDefinedCommandDir;
+
     public CmdUnit() {
         super("cmd");
+        userDefinedCommandDir = new File(getTmpDir().toFile(), "udc");
+        userDefinedCommandDir.mkdirs();
     }
 
     @Override
@@ -63,7 +67,7 @@ public class CmdUnit extends BaseUnit {
     private String deployCommand(String alias, Command command) throws IOException {
         commandsServer.addCommand(alias, command);
         String commandBody = String.format(mockCommand, proxyCommandPath, command.useInputStream(), alias);
-        File commandFile = new File(getTmpDir().toFile(), alias);
+        File commandFile = new File(userDefinedCommandDir, alias);
         FileWriter commandFileWriter = new FileWriter(commandFile);
         commandFileWriter.write(commandBody);
         commandFileWriter.close();
@@ -76,7 +80,7 @@ public class CmdUnit extends BaseUnit {
                 CmdUnit.class.getClassLoader().getResourceAsStream("proxy.sh"));
         File proxyCommandFile = new File(getTmpDir().toFile(), "proxy.sh");
         Writer proxyCommandWriter = new FileWriter(proxyCommandFile);
-        proxyCommandWriter.write(String.format(proxyCommand, host, port));
+        proxyCommandWriter.write(String.format(proxyCommand, host, port, System.getProperty("java.class.path")));
         proxyCommandWriter.close();
         proxyCommandPath = proxyCommandFile.getAbsolutePath();
         proxyCommandFile.setExecutable(true);
