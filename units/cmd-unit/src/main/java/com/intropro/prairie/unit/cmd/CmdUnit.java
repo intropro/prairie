@@ -34,6 +34,9 @@ public class CmdUnit extends BaseUnit {
         super("cmd");
         userDefinedCommandDir = new File(getTmpDir().toFile(), "udc");
         userDefinedCommandDir.mkdirs();
+        userDefinedCommandDir.setExecutable(true, false);
+        userDefinedCommandDir.setReadable(true, false);
+        userDefinedCommandDir.setWritable(true, false);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class CmdUnit extends BaseUnit {
             throw new InitUnitException("Failed to start command server", e);
         }
         try {
-            path = getTmpDir().toAbsolutePath().toString();
+            path = userDefinedCommandDir.getAbsolutePath();
             deployProxyCommand();
             mockCommand = IOUtils.toString(CmdUnit.class.getClassLoader().getResourceAsStream("mock.sh"));
         } catch (IOException e) {
@@ -71,7 +74,7 @@ public class CmdUnit extends BaseUnit {
         FileWriter commandFileWriter = new FileWriter(commandFile);
         commandFileWriter.write(commandBody);
         commandFileWriter.close();
-        commandFile.setExecutable(true);
+        commandFile.setExecutable(true, false);
         return commandFile.getAbsolutePath();
     }
 
@@ -83,7 +86,7 @@ public class CmdUnit extends BaseUnit {
         proxyCommandWriter.write(String.format(proxyCommand, host, port, System.getProperty("java.class.path")));
         proxyCommandWriter.close();
         proxyCommandPath = proxyCommandFile.getAbsolutePath();
-        proxyCommandFile.setExecutable(true);
+        proxyCommandFile.setExecutable(true, false);
     }
 
     public String getPath() {

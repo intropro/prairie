@@ -36,7 +36,12 @@ public abstract class BaseUnit implements Unit {
 
     static {
         try {
-            GLOBAL_TMP_DIR = Files.createDirectories(Paths.get(System.getProperty("java.io.tmpdir"), "prairie"));
+            Path globalTmpPath = Paths.get(System.getProperty("java.io.tmpdir"), "prairie");
+            LOGGER.info("Creating global tmp directory: " + globalTmpPath);
+            GLOBAL_TMP_DIR = Files.createDirectories(globalTmpPath);
+            GLOBAL_TMP_DIR.toFile().setExecutable(true, false);
+            GLOBAL_TMP_DIR.toFile().setReadable(true, false);
+            GLOBAL_TMP_DIR.toFile().setWritable(true, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -51,6 +56,7 @@ public abstract class BaseUnit implements Unit {
         clearOldDTmpDirectories();
         try {
             tmpDir = Files.createTempDirectory(GLOBAL_TMP_DIR, unitName);
+            LOGGER.info("Created " + unitName + " tmp directory: " + tmpDir);
         } catch (IOException e) {
             throw new RuntimeException("Failed to create tmp dir inside: " + GLOBAL_TMP_DIR, e);
         }
