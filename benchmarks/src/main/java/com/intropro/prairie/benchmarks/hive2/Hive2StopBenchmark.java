@@ -29,7 +29,7 @@ public class Hive2StopBenchmark {
     }
 
     @Benchmark
-    public void measureHdfsStart() throws BigDataTestFrameworkException {
+    public void measureStop() throws BigDataTestFrameworkException {
         dependencyResolver.destroy(hive2UnitContainer);
     }
 

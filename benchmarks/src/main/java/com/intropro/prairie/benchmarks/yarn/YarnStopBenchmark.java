@@ -29,7 +29,7 @@ public class YarnStopBenchmark {
     }
 
     @Benchmark
-    public void measureHdfsStart() throws BigDataTestFrameworkException {
+    public void measureStop() throws BigDataTestFrameworkException {
         dependencyResolver.destroy(yarnUnitContainer);
     }
 
