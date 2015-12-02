@@ -1,0 +1,34 @@
+<configuration>
+    <property>
+        <name>mapreduce.task.io.sort.mb</name>
+        <value>10</value>
+    </property>
+    <property>
+        <name>mapreduce.jobtracker.handler.count</name>
+        <value>3</value>
+    </property>
+    <property>
+        <name>mapreduce.client.submit.file.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>mapreduce.tasktracker.http.threads</name>
+        <value>10</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.job.task.listener.thread-count</name>
+        <value>5</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.client.thread-count</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.move.thread-count</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.containerlauncher.threadpool-initial-size</name>
+        <value>3</value>
+    </property>
+</configuration>

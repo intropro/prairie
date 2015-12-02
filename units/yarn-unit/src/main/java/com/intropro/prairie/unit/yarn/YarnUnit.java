@@ -22,6 +22,7 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.v2.MiniMRYarnCluster;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
+import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceScheduler;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler;
 
@@ -36,7 +37,7 @@ public class YarnUnit extends HadoopUnit {
 
     private static final String NAME = "prairie-yarn";
 
-    private MiniMRYarnCluster miniMR;
+    private MiniYARNCluster miniMR;
 
     @BigDataUnit
     private HdfsUnit hdfsUnit;
@@ -63,6 +64,7 @@ public class YarnUnit extends HadoopUnit {
         bootConf.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
         bootConf.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
         bootConf.addResource("yarn-site.xml");
+        bootConf.addResource("mapred-site.xml");
         miniMR = new MiniMRYarnCluster(NAME);
         miniMR.init(bootConf);
         miniMR.start();

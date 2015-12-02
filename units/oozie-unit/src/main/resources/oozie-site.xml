@@ -1,2 +1,34 @@
 <configuration>
+    <property>
+        <name>oozie.db.schema.name</name>
+        <value>oozie</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.create.db.schema</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.validate.db.connection</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.jdbc.driver</name>
+        <value>org.hsqldb.jdbcDriver</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.jdbc.url</name>
+        <value>jdbc:hsqldb:mem:${oozie.db.schema.name}</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.jdbc.username</name>
+        <value>sa</value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.jdbc.password</name>
+        <value></value>
+    </property>
+    <property>
+        <name>oozie.service.JPAService.pool.max.active.conn</name>
+        <value>10</value>
+    </property>
 </configuration>

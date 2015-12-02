@@ -2,9 +2,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,12 +32,17 @@ import org.apache.oozie.util.XConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 /**
  * Created by presidentio on 9/13/15.
  */
 public class OozieUnit extends HadoopUnit {
+
+    private static final List<String> EXCLUDED_SERVICES = Arrays.asList("org.apache.oozie.service.RecoveryService",
+            "org.apache.oozie.service.PurgeService", "org.apache.oozie.service.ShareLibService");
 
     private EmbeddedServletContainer container;
 
@@ -67,8 +72,6 @@ public class OozieUnit extends HadoopUnit {
         dataDir.mkdirs();
         actionConfDir = new File(getTmpDir().toFile(), "action-conf");
         actionConfDir.mkdirs();
-
-        System.setProperty("derby.stream.error.file", new File(getTmpDir().toFile(), "derby.log").getAbsolutePath());
 
         try {
             hdfsUnit.getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/", user));
@@ -103,8 +106,14 @@ public class OozieUnit extends HadoopUnit {
             XConfiguration.copy(createConfig(), services.getConf());
             XConfiguration.copy(yarnUnit.getConfig(), services.getConf());
             XConfiguration.copy(hdfsUnit.getFileSystem().getConf(), services.getConf());
+            Configuration configuration = new Configuration();
+            configuration.addResource("oozie-site.xml");
+            XConfiguration.copy(configuration, services.getConf());
             String classes = services.getConf().get(Services.CONF_SERVICE_CLASSES);
-            services.getConf().set(Services.CONF_SERVICE_CLASSES, classes.replaceAll("org.apache.oozie.service.ShareLibService,", ""));
+            for (String excludedService : EXCLUDED_SERVICES) {
+                classes = classes.replaceAll(excludedService + "\\s?,?", "");
+            }
+            services.getConf().set(Services.CONF_SERVICE_CLASSES, classes);
             services.init();
         } catch (ServiceException e) {
             throw new InitUnitException("Failed to start oozie component", e);
