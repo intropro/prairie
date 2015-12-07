@@ -40,8 +40,8 @@ STORED AS SEQUENCEFILE
 LOCATION '${TEST_TABLE1_2_LOC}'
 TBLPROPERTIES ('serialization.null.format' = 'NULL');
 
-INSERT INTO test_table1 VALUES ("f1_1", "f2_1", "f3_1"), ("f1_2", "f2_2", "f3_2"), ("f1_3", "f2_3", "f3_3");
-INSERT INTO test_table2 VALUES ("f1_1", "f2_1", "f3_1"), ("f1_2", "f2_2", "f3_2"), ("f1_3", "f2_3", "f3_3");
+INSERT INTO TABLE test_table1 VALUES ("f1_1", "f2_1", "f3_1"), ("f1_2", "f2_2", "f3_2"), ("f1_3", "f2_3", "f3_3");
+INSERT INTO TABLE test_table2 VALUES ("f1_1", "f2_1", "f3_1"), ("f1_2", "f2_2", "f3_2"), ("f1_3", "f2_3", "f3_3");
 
-INSERT INTO test_table1_2
+INSERT INTO TABLE test_table1_2
 SELECT * FROM test_table1 t1 JOIN test_table2 t2 ON (t1.f1=t2.f4);

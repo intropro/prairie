@@ -87,7 +87,7 @@ public class DependencyResolver {
         boolean destroyAtLeastOne = true;
         while (destroyAtLeastOne) {
             destroyAtLeastOne = false;
-            List<Class> destroyedComponents = new ArrayList<Class>();
+            List<Class> destroyedComponents = new ArrayList<>();
             for (Map.Entry<Class, Unit> classEmbeddedComponentEntry : units.entrySet()) {
                 if (dependencies.get(classEmbeddedComponentEntry.getKey()).isEmpty()) {
                     for (List<Object> objects : dependencies.values()) {

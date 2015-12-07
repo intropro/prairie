@@ -32,7 +32,7 @@ public class Hive2UnitTest {
     @Test
     public void testForDemo() throws Exception {
         hive2Unit.execute("create table prairie_test_table (id bigint, name string)");
-        hive2Unit.execute("insert into prairie_test_table values (1, 'first')");
+        hive2Unit.execute("insert into table prairie_test_table values (1, 'first')");
         List<Map<String, String>> tableContent = hive2Unit.executeQuery("select * from prairie_test_table");
         Map<String, String> expectedRaw = new HashMap<>();
         expectedRaw.put("prairie_test_table.id", "1");
@@ -59,7 +59,7 @@ public class Hive2UnitTest {
     @Test
     public void testInsertSelect() throws Exception {
         String createTableScript = "create table test_table (id bigint, field2 string)";
-        String insertScript = "insert into test_table values (%s)";
+        String insertScript = "insert into table test_table values (%s)";
         String selectScript = "select * from test_table";
         hive2Unit.execute(createTableScript);
         List<String> csvLines = IOUtils.readLines(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/data/test_table.csv"));

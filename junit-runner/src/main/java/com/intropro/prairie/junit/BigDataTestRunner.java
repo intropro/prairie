@@ -2,9 +2,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,7 @@
 package com.intropro.prairie.junit;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
+import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -86,8 +87,20 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            statement.evaluate();
-            dependencyResolver.destroy(target);
+            Throwable error = null;
+            try {
+                statement.evaluate();
+            } catch (Throwable e) {
+                error = e;
+            }
+            try {
+                dependencyResolver.destroy(target);
+            } catch (DestroyUnitException e) {
+                e.printStackTrace();
+            }
+            if (error != null) {
+                throw error;
+            }
         }
 
     }
@@ -123,8 +136,20 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            statement.evaluate();
-            dependencyResolver.destroyStatic(clazz);
+            Throwable error = null;
+            try {
+                statement.evaluate();
+            } catch (Throwable e) {
+                error = e;
+            }
+            try {
+                dependencyResolver.destroyStatic(clazz);
+            } catch (DestroyUnitException e) {
+                e.printStackTrace();
+            }
+            if (error != null) {
+                throw error;
+            }
         }
     }
 }

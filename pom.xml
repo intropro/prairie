@@ -357,11 +357,10 @@
             </plugins>
         </pluginManagement>
     </build>
-<!--
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>sonatype</id>
             <build>
                 <plugins>
                     <plugin>
@@ -406,19 +405,46 @@
                     </plugin>
                 </plugins>
             </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh-intropro</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh-intropro</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>intropro</id>
+
+            <repositories>
+                <repository>
+                    <id>nexus-internal-releases</id>
+                    <name>EA Nexus Releases</name>
+                    <url>http://build.ea.intropro.com:8081/nexus/content/repositories/releases/</url>
+                </repository>
+                <repository>
+                    <id>nexus-internal-snapshots</id>
+                    <name>EA Nexus Snapshots</name>
+                    <url>http://build.ea.intropro.com:8081/nexus/content/repositories/snapshots/</url>
+                </repository>
+            </repositories>
+
+            <distributionManagement>
+                <repository>
+                    <id>nexus-internal-releases</id>
+                    <name>EA Nexus Releases</name>
+                    <url>http://build.ea.intropro.com:8081/nexus/content/repositories/releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus-internal-snapshots</id>
+                    <name>EA Nexus Snapshots</name>
+                    <url>http://build.ea.intropro.com:8081/nexus/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
--->
 
 </project>

@@ -9,4 +9,4 @@ STORED AS SEQUENCEFILE;
 -- Comment before comment
 --Comment without spaces
 -- Comment after comment
-INSERT INTO comment_table VALUES ('1');
+INSERT INTO TABLE comment_table VALUES ('1');

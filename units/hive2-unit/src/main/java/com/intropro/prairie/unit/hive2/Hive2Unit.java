@@ -15,6 +15,7 @@ package com.intropro.prairie.unit.hive2;
 
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
+import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by presidentio on 07.09.15.
@@ -42,9 +44,12 @@ public class Hive2Unit extends HadoopUnit {
     private static final Logger LOGGER = LogManager.getLogger(Hive2Unit.class);
 
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
+    private static final long WAIT_START_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 
+    public static final String HIVE_MODE = "binary";
     public static final String HIVE_USER = "hive";
     public static final String HIVE_GROUP = "hive";
+    public static final String HIVE_HOST = "localhost";
 
     public static final String HIVE_HOME = "/user/hive";
 
@@ -61,6 +66,8 @@ public class Hive2Unit extends HadoopUnit {
     private Connection connection;
     private Statement statement;
     private String jdbcUrl;
+    private int port;
+    private String metastoreJdbcUrl;
 
     public Hive2Unit() {
         super("hive");
@@ -74,7 +81,11 @@ public class Hive2Unit extends HadoopUnit {
         } catch (IOException e) {
             throw new InitUnitException("Failed to create hive home directory: " + HIVE_HOME, e);
         }
+        port = PortProvider.nextPort();
         HiveConf hiveConf = new HiveConf(yarnUnit.getConfig(), Hive2Unit.class);
+        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE, HIVE_MODE);
+        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
+        hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
         hiveConf.set("datanucleus.connectiondrivername", "org.hsqldb.jdbc.JDBCDriver");
         hiveConf.set("datanucleus.connectionPoolingType", "None");
         hiveConf.set("javax.jdo.option.ConnectionDriverName", "org.hsqldb.jdbc.JDBCDriver");
@@ -86,14 +97,14 @@ public class Hive2Unit extends HadoopUnit {
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVECONVERTJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVESKEWJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
+        hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
         try {
             hiveConf.setBoolVar(HiveConf.ConfVars.SUBMITLOCALTASKVIACHILD, false);
         } catch (NoSuchFieldError e) {
             LOGGER.warn("Can't disable SUBMITLOCALTASKVIACHILD, HiveConf.ConfVars does not contains such field");
         }
-        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
-        String metaStorageUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString() + ";create=true";
-        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metaStorageUrl);
+        metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
+        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
         hiveServer = new HiveServer2();
         hiveServer.init(hiveConf);
         hiveServer.start();
@@ -106,20 +117,41 @@ public class Hive2Unit extends HadoopUnit {
         } catch (ClassNotFoundException e) {
             throw new InitUnitException("Could not load hive jdbc driver", e);
         }
-        try {
-            String hiveHost = "localhost";
-            int hivePort = getConfig().getIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT);
-            jdbcUrl = String.format("jdbc:hive2://%s:%s/default", hiveHost, hivePort);
-            LOGGER.info("Connecting to " + jdbcUrl);
-            connection = DriverManager.getConnection(jdbcUrl, HIVE_USER, "");
-        } catch (SQLException e) {
-            throw new InitUnitException("Failed to create hive connection", e);
+        long startTime = System.currentTimeMillis();
+        SQLException mostRecentException = null;
+        while (connection == null && System.currentTimeMillis() - startTime < WAIT_START_TIMEOUT) {
+            try {
+                int hivePort = getConfig().getIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT);
+                jdbcUrl = String.format("jdbc:hive2://%s:%s/default", HIVE_HOST, hivePort);
+                LOGGER.info("Connecting to " + jdbcUrl);
+                connection = DriverManager.getConnection(jdbcUrl, HIVE_USER, "");
+                break;
+            } catch (SQLException e) {
+                mostRecentException = e;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e1) {
+                    throw new InitUnitException(e1);
+                }
+            }
+        }
+        if (connection == null) {
+            throw new InitUnitException("Failed to create hive connection", mostRecentException);
         }
         try {
             statement = connection.createStatement();
         } catch (SQLException e) {
             throw new InitUnitException("Failed to create hive statement", e);
         }
+        try {
+            createDefaultDatabase();
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to create default database: default", e);
+        }
+    }
+
+    private void createDefaultDatabase() throws SQLException {
+        statement.execute("CREATE DATABASE IF NOT EXISTS default");
     }
 
     @Override
@@ -131,6 +163,12 @@ public class Hive2Unit extends HadoopUnit {
             throw new DestroyUnitException("Failed to close hive connection", e);
         }
         hiveServer.stop();
+        try {
+            DriverManager.getConnection(
+                    metastoreJdbcUrl + ";shutdown=true", "SA", "");
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to clean metastore db", e);
+        }
     }
 
     public String getJdbcUrl() {
