@@ -16,6 +16,7 @@ package com.intropro.prairie.unit.hive2;
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.unit.common.PortProvider;
+import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -42,6 +43,8 @@ import java.util.concurrent.TimeUnit;
 public class Hive2Unit extends HadoopUnit {
 
     private static final Logger LOGGER = LogManager.getLogger(Hive2Unit.class);
+
+    public static final Version VERSION = getVersion();
 
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
     private static final long WAIT_START_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
@@ -98,11 +101,7 @@ public class Hive2Unit extends HadoopUnit {
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVESKEWJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
-        try {
-            hiveConf.setBoolVar(HiveConf.ConfVars.SUBMITLOCALTASKVIACHILD, false);
-        } catch (NoSuchFieldError e) {
-            LOGGER.warn("Can't disable SUBMITLOCALTASKVIACHILD, HiveConf.ConfVars does not contains such field");
-        }
+        hiveConf.set("hive.exec.submit.local.task.via.child", "false");
         metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
         hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
         hiveServer = new HiveServer2();
@@ -246,6 +245,16 @@ public class Hive2Unit extends HadoopUnit {
                                                         Format<Map<String, String>> expectedFormat) throws IOException, SQLException {
         InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
         return compare(query, expectedStream, expectedFormat);
+    }
+
+    private static Version getVersion() {
+        Properties properties = new Properties();
+        try {
+            properties.load(Hive2Unit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.apache.hive/hive-common/pom.properties"));
+        } catch (IOException e) {
+            LOGGER.error("Can't load hive version", e);
+        }
+        return new Version(properties.getProperty("version", "unknown"));
     }
 
 }
