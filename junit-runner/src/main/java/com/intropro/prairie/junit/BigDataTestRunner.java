@@ -15,6 +15,7 @@ package com.intropro.prairie.junit;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
+import com.intropro.prairie.unit.common.exception.InitUnitException;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -68,7 +69,11 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            dependencyResolver.resolve(target);
+            try {
+                dependencyResolver.resolve(target);
+            } catch (Throwable e) {
+                throw new InitUnitException(e);
+            }
             statement.evaluate();
         }
 
@@ -90,6 +95,8 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
             Throwable error = null;
             try {
                 statement.evaluate();
+            } catch (InitUnitException e) {
+                throw e;
             } catch (Throwable e) {
                 error = e;
             }
@@ -118,7 +125,11 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            dependencyResolver.resolveStatic(clazz);
+            try {
+                dependencyResolver.resolveStatic(clazz);
+            } catch (Throwable e) {
+                throw new InitUnitException(e);
+            }
             statement.evaluate();
         }
     }
@@ -139,6 +150,8 @@ public class BigDataTestRunner extends BlockJUnit4ClassRunner {
             Throwable error = null;
             try {
                 statement.evaluate();
+            } catch (InitUnitException e) {
+                throw e;
             } catch (Throwable e) {
                 error = e;
             }

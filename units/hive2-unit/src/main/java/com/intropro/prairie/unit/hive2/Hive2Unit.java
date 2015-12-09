@@ -162,12 +162,6 @@ public class Hive2Unit extends HadoopUnit {
             throw new DestroyUnitException("Failed to close hive connection", e);
         }
         hiveServer.stop();
-        try {
-            DriverManager.getConnection(
-                    metastoreJdbcUrl + ";shutdown=true", "SA", "");
-        } catch (SQLException e) {
-            LOGGER.warn("Failed to clean metastore db", e);
-        }
     }
 
     public String getJdbcUrl() {

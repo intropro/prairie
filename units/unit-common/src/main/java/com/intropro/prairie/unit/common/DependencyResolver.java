@@ -67,7 +67,10 @@ public class DependencyResolver {
         for (Field field : object.getClass().getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
             if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
-                dependencies.get(field.getType()).remove(object);
+                List<Object> links = dependencies.get(field.getType());
+                if(links != null) {
+                    links.remove(object);
+                }
             }
         }
         garbageCollector();
@@ -77,7 +80,10 @@ public class DependencyResolver {
         for (Field field : clazz.getClass().getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
             if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
-                dependencies.get(field.getType()).remove(clazz);
+                List<Object> links = dependencies.get(field.getType());
+                if(links != null) {
+                    links.remove(clazz);
+                }
             }
         }
         garbageCollector();
@@ -110,11 +116,13 @@ public class DependencyResolver {
             if (embeddedComponent == null) {
                 embeddedComponent = clazz.newInstance();
                 units.put(clazz, embeddedComponent);
+                dependencies.put(clazz, new ArrayList<>());
                 resolve(embeddedComponent);
                 embeddedComponent.start();
             }
             return embeddedComponent;
         } catch (InstantiationException | IllegalAccessException e) {
+            units.remove(clazz);
             throw new BigDataTestFrameworkException(e);
         }
     }
@@ -126,7 +134,7 @@ public class DependencyResolver {
             List<Object> dependentObjects = dependencies.get(dependency.getClass());
             if (dependentObjects == null) {
                 dependentObjects = new ArrayList<>();
-                dependencies.put(dependency.getClass(), dependentObjects);
+                dependencies.get(dependency.getClass()).add(dependentObjects);
             }
             dependentObjects.add(target);
         } catch (IllegalAccessException e) {

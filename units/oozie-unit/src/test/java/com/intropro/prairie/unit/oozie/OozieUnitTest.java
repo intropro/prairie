@@ -77,7 +77,7 @@ public class OozieUnitTest {
         prepareShellAction(properties);
 
         OozieJob oozieJob = oozieUnit.run(properties);
-        oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(5));
+        oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(10));
         Assert.assertEquals(WorkflowJob.Status.SUCCEEDED, oozieJob.getWorkflowJob().getStatus());
 
         checkJavaAction(properties);
