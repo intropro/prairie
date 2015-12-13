@@ -131,4 +131,8 @@ public abstract class BaseUnit implements Unit {
         }
         return script;
     }
+
+    public static void main(String[] args) {
+        LOGGER.info("Info message");
+    }
 }
