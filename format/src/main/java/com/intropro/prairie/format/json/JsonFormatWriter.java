@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class JsonFormatWriter implements OutputFormatWriter<Map<String, String>> {
+public class JsonFormatWriter implements OutputFormatWriter<Map<String, Object>> {
 
     private OutputStream outputStream;
 
@@ -36,7 +36,7 @@ public class JsonFormatWriter implements OutputFormatWriter<Map<String, String>>
     }
 
     @Override
-    public void write(Map<String, String> line) throws IOException {
+    public void write(Map<String, Object> line) throws IOException {
         String lineStr = objectMapper.writeValueAsString(line);
         if (!firstLine) {
             outputStream.write('\n');

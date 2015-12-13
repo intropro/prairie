@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class JsonFormatReader extends AbstractFormatReader<Map<String, String>> {
+public class JsonFormatReader extends AbstractFormatReader<Map<String, Object>> {
 
     private BufferedReader bufferedReader;
 
@@ -41,7 +41,7 @@ public class JsonFormatReader extends AbstractFormatReader<Map<String, String>> 
     }
 
     @Override
-    public Map<String, String> next() throws IOException {
+    public Map<String, Object> next() throws IOException {
         String line = bufferedReader.readLine();
         if (line == null) {
             return null;

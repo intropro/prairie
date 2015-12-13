@@ -1,0 +1,69 @@
+{
+  "namespace": "com.intropro.prairie.avro",
+  "type": "record",
+  "name": "TestSchema",
+  "fields": [
+    {
+      "name": "field0",
+      "type": "boolean"
+    },
+    {
+      "name": "field1",
+      "type": "int"
+    },
+    {
+      "name": "field2",
+      "type": "string"
+    },
+    {
+      "name": "field3",
+      "type": "long"
+    },
+    {
+      "name": "field4",
+      "type": "float"
+    },
+    {
+      "name": "field5",
+      "type": "double"
+    },
+    {
+      "name": "field7",
+      "type": "null"
+    },
+    {
+      "name": "field8",
+      "type": "int"
+    },
+    {
+      "name": "field9",
+      "type": {
+        "name":"child_record",
+        "type": "record",
+        "fields": [
+          {
+            "name": "field9_field0",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "field10",
+      "type": {
+        "type": "array",
+        "items": "int"
+      }
+    },
+    {
+      "name": "field11",
+      "type": {
+        "type": "map",
+        "values": {
+          "type": "array",
+          "items": "int"
+        }
+      }
+    }
+  ]
+}

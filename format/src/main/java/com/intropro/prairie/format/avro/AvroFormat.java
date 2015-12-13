@@ -16,17 +16,24 @@ package com.intropro.prairie.format.avro;
 import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
+import com.intropro.prairie.format.exception.FormatException;
 import org.apache.avro.Schema;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 /**
  * Created by presidentio on 10/7/15.
  */
-public class AvroFormat implements Format<Map<String, String>> {
+public class AvroFormat implements Format<Map<String, Object>> {
 
     private Schema schema;
+
+    public AvroFormat() {
+    }
 
     public AvroFormat(String schemaStr) {
         this.schema = new Schema.Parser().parse(schemaStr);
@@ -41,12 +48,15 @@ public class AvroFormat implements Format<Map<String, String>> {
     }
 
     @Override
-    public InputFormatReader<Map<String, String>> createReader(InputStream inputStream) {
+    public InputFormatReader<Map<String, Object>> createReader(InputStream inputStream) throws FormatException {
         return new AvroFormatReader(inputStream, schema);
     }
 
     @Override
-    public OutputFormatWriter<Map<String, String>> createWriter(OutputStream outputStream) {
+    public OutputFormatWriter<Map<String, Object>> createWriter(OutputStream outputStream) throws FormatException {
+        if (schema == null) {
+            throw new FormatException("Avro fromat writer can't be created without schema");
+        }
         return new AvroFormatWriter(outputStream, schema);
     }
 

@@ -1,14 +1,14 @@
 package com.intropro.prairie.format;
 
-import com.intropro.prairie.format.avro.AvroFormat;
-import com.intropro.prairie.format.json.JsonFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -19,8 +19,7 @@ public class CommonKeyValueFormatTest {
 
     @Parameterized.Parameters(name = "{index}: {0}({1})")
     public static Collection<Object[]> data() throws IOException {
-        List<Format<Map<String, String>>> formats = Arrays.asList(new JsonFormat(), new SvFormat(','), new SvFormat('|'),
-                new AvroFormat(CommonKeyValueFormatTest.class.getClassLoader().getResourceAsStream("format/avro.avsc")));
+        List<Format<Map<String, String>>> formats = Arrays.<Format<Map<String, String>>>asList(new SvFormat(','), new SvFormat('|'));
         List<Map<String, String>> data = new ArrayList<>();
         Map<String, String> raw = new HashMap<>();
         raw.put("field1", "value1");

@@ -13,6 +13,8 @@
  */
 package com.intropro.prairie.format;
 
+import com.intropro.prairie.format.exception.FormatException;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -21,8 +23,8 @@ import java.io.OutputStream;
  */
 public interface Format<T> {
 
-    InputFormatReader<T> createReader(InputStream inputStream);
+    InputFormatReader<T> createReader(InputStream inputStream) throws FormatException;
 
-    OutputFormatWriter<T> createWriter(OutputStream outputStream);
+    OutputFormatWriter<T> createWriter(OutputStream outputStream) throws FormatException;
 
 }

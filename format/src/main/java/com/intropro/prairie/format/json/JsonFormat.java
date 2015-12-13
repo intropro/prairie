@@ -24,15 +24,15 @@ import java.util.Map;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class JsonFormat implements Format<Map<String, String>> {
+public class JsonFormat implements Format<Map<String, Object>> {
 
     @Override
-    public InputFormatReader<Map<String, String>> createReader(InputStream inputStream) {
+    public InputFormatReader<Map<String, Object>> createReader(InputStream inputStream) {
         return new JsonFormatReader(inputStream);
     }
 
     @Override
-    public OutputFormatWriter<Map<String, String>> createWriter(OutputStream outputStream) {
+    public OutputFormatWriter<Map<String, Object>> createWriter(OutputStream outputStream) {
         return new JsonFormatWriter(outputStream);
     }
 

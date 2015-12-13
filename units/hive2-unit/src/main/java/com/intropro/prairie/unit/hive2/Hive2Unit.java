@@ -15,6 +15,7 @@ package com.intropro.prairie.unit.hive2;
 
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
+import com.intropro.prairie.format.exception.FormatException;
 import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
@@ -99,7 +100,6 @@ public class Hive2Unit extends HadoopUnit {
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVEOPTINDEXFILTER, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVECONVERTJOIN, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.HIVESKEWJOIN, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
         hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
         hiveConf.set("hive.exec.submit.local.task.via.child", "false");
         metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
@@ -222,11 +222,15 @@ public class Hive2Unit extends HadoopUnit {
     public CompareResponse<Map<String, String>> compare(String query, InputStream expectedStream,
                                                         Format<Map<String, String>> expectedFormat) throws IOException, SQLException {
         List<Map<String, String>> queryResult = executeQuery(query);
-        InputFormatReader<Map<String, String>> expectedReader = expectedFormat.createReader(expectedStream);
-        CompareResponse<Map<String, String>> compareResponse = byLineComparator.compare(expectedReader.all(), queryResult);
-        expectedReader.close();
-        expectedReader.close();
-        return compareResponse;
+        try {
+            InputFormatReader<Map<String, String>> expectedReader = expectedFormat.createReader(expectedStream);
+            CompareResponse<Map<String, String>> compareResponse = byLineComparator.compare(expectedReader.all(), queryResult);
+            expectedReader.close();
+            expectedReader.close();
+            return compareResponse;
+        } catch (FormatException e) {
+            throw new IOException(e);
+        }
     }
 
     public CompareResponse<Map<String, String>> compare(String query, Path expectedPath,

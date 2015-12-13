@@ -18,6 +18,7 @@ import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
+import com.intropro.prairie.format.exception.FormatException;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -86,14 +87,18 @@ public class HdfsUnit extends HadoopUnit {
         Path outPath = new Path(dstPath);
         getFileSystem().mkdirs(outPath.getParent());
         FSDataOutputStream fsDataOutputStream = getFileSystem().create(outPath);
-        InputFormatReader<T> inputFormatReader = inputFormat.createReader(inputStream);
-        OutputFormatWriter<T> outputFormatWriter = outputFormat.createWriter(fsDataOutputStream);
-        T line;
-        while ((line = inputFormatReader.next()) != null) {
-            outputFormatWriter.write(line);
+        try {
+            InputFormatReader<T> inputFormatReader = inputFormat.createReader(inputStream);
+            OutputFormatWriter<T> outputFormatWriter = outputFormat.createWriter(fsDataOutputStream);
+            T line;
+            while ((line = inputFormatReader.next()) != null) {
+                outputFormatWriter.write(line);
+            }
+            inputFormatReader.close();
+            outputFormatWriter.close();
+        } catch (FormatException e) {
+            throw new IOException(e);
         }
-        inputFormatReader.close();
-        outputFormatWriter.close();
     }
 
     public <T> CompareResponse<T> compare(Path path, Format<T> format,
@@ -114,12 +119,16 @@ public class HdfsUnit extends HadoopUnit {
         } else {
             inputStream = getFileSystem().open(path);
         }
-        InputFormatReader<T> reader = format.createReader(inputStream);
-        InputFormatReader<T> expectedReader = expectedFormat.createReader(expectedStream);
-        CompareResponse<T> compareResponse = byLineComparator.compare(expectedReader.all(), reader.all());
-        expectedReader.close();
-        expectedReader.close();
-        return compareResponse;
+        try {
+            InputFormatReader<T> reader = format.createReader(inputStream);
+            InputFormatReader<T> expectedReader = expectedFormat.createReader(expectedStream);
+            CompareResponse<T> compareResponse = byLineComparator.compare(expectedReader.all(), reader.all());
+            expectedReader.close();
+            expectedReader.close();
+            return compareResponse;
+        } catch (FormatException e) {
+            throw new IOException(e);
+        }
     }
 
     public <T> CompareResponse<T> compare(Path path, Format<T> format,

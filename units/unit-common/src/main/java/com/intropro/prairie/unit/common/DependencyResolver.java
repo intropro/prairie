@@ -34,7 +34,15 @@ public class DependencyResolver {
     private Map<Class, List<Object>> dependencies = new HashMap<Class, List<Object>>();
 
     public void resolve(Object object) throws BigDataTestFrameworkException {
-        for (Field field : object.getClass().getDeclaredFields()) {
+        resolve(object, object.getClass());
+    }
+
+    private void resolve(Object object, Class clazz) throws BigDataTestFrameworkException {
+        Class parentClass = clazz.getSuperclass();
+        if(parentClass != null && !parentClass.equals(Object.class)) {
+            resolve(object, parentClass);
+        }
+        for (Field field : clazz.getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
             if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, object);
@@ -64,7 +72,12 @@ public class DependencyResolver {
     }
 
     public void destroy(Object object) throws DestroyUnitException {
-        for (Field field : object.getClass().getDeclaredFields()) {
+        destroy(object, object.getClass());
+        garbageCollector();
+    }
+
+    private void destroy(Object object, Class clazz) throws DestroyUnitException {
+        for (Field field : clazz.getDeclaredFields()) {
             BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
             if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 List<Object> links = dependencies.get(field.getType());
@@ -73,7 +86,10 @@ public class DependencyResolver {
                 }
             }
         }
-        garbageCollector();
+        Class parentClass = clazz.getSuperclass();
+        if(parentClass != null && !parentClass.equals(Object.class)) {
+            destroy(object, parentClass);
+        }
     }
 
     public void destroyStatic(Class clazz) throws DestroyUnitException {
