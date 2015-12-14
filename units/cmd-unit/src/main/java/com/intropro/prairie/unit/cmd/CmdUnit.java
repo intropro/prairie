@@ -60,7 +60,7 @@ public class CmdUnit extends BaseUnit {
 
     @Override
     protected void destroy() throws DestroyUnitException {
-        commandsServer.interrupt();
+        commandsServer.close();
     }
 
     public String declare(String alias, Command command) throws IOException {

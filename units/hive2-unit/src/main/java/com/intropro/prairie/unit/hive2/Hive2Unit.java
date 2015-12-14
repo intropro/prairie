@@ -50,7 +50,6 @@ public class Hive2Unit extends HadoopUnit {
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
     private static final long WAIT_START_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 
-    public static final String HIVE_MODE = "binary";
     public static final String HIVE_USER = "hive";
     public static final String HIVE_GROUP = "hive";
     public static final String HIVE_HOST = "localhost";
@@ -87,21 +86,9 @@ public class Hive2Unit extends HadoopUnit {
         }
         port = PortProvider.nextPort();
         HiveConf hiveConf = new HiveConf(yarnUnit.getConfig(), Hive2Unit.class);
-        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE, HIVE_MODE);
         hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
+        hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().toString());
         hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
-        hiveConf.set("datanucleus.connectiondrivername", "org.hsqldb.jdbc.JDBCDriver");
-        hiveConf.set("datanucleus.connectionPoolingType", "None");
-        hiveConf.set("javax.jdo.option.ConnectionDriverName", "org.hsqldb.jdbc.JDBCDriver");
-        hiveConf.setVar(HiveConf.ConfVars.HADOOPBIN, "NO_BIN!");
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVE_SUPPORT_CONCURRENCY, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVE_INFER_BUCKET_SORT, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVEMETADATAONLYQUERIES, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVEOPTINDEXFILTER, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVECONVERTJOIN, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.HIVESKEWJOIN, false);
-        hiveConf.setBoolVar(HiveConf.ConfVars.LOCALMODEAUTO, false);
-        hiveConf.set("hive.exec.submit.local.task.via.child", "false");
         metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
         hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
         hiveServer = new HiveServer2();

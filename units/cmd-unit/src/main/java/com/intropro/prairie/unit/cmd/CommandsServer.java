@@ -1,5 +1,6 @@
 package com.intropro.prairie.unit.cmd;
 
+import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +48,7 @@ public class CommandsServer extends Thread implements CommandProvider {
                     commandProcessor.start();
                 }
             } catch (IOException e) {
-                LOGGER.error("Server socket error", e);
+                LOGGER.error("Server socket error or socket closed: " + e.getClass() + ": " + e.getMessage());
             }
             for (CommandProcessor commandProcessor : commandProcessors) {
                 commandProcessor.interrupt();
@@ -65,5 +66,16 @@ public class CommandsServer extends Thread implements CommandProvider {
     @Override
     public Command getCommand(String name) {
         return commands.get(name);
+    }
+
+    public void close() throws DestroyUnitException {
+        interrupt();
+        if (serverSocket != null) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                throw new DestroyUnitException(e);
+            }
+        }
     }
 }
