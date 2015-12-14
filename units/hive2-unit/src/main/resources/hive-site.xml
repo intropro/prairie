@@ -33,7 +33,7 @@
     </property>
     <property>
         <name>hive.support.concurrency</name>
-        <value>true</value>
+        <value>false</value>
     </property>
     <property>
         <name>hive.exec.infer.bucket.sort</name>

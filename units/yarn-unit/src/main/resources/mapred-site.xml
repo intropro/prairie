@@ -31,4 +31,16 @@
         <name>yarn.app.mapreduce.am.containerlauncher.threadpool-initial-size</name>
         <value>3</value>
     </property>
+    <property>
+        <name>mapreduce.job.committer.setup.cleanup.needed</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>mapreduce.job.ubertask.enable</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.cleaner.enable</name>
+        <value>false</value>
+    </property>
 </configuration>
