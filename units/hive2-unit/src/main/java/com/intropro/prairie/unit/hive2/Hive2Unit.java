@@ -157,7 +157,7 @@ public class Hive2Unit extends HadoopUnit {
 
     public HiveConf getConfig() {
         HiveConf hiveConf = new HiveConf(hiveServer.getHiveConf());
-        hiveConf.addResource("hive-site.xml");
+        hiveConf.addResource("hive-site.prairie.xml");
         return hiveConf;
     }
 

@@ -107,7 +107,7 @@ public class OozieUnit extends HadoopUnit {
             XConfiguration.copy(yarnUnit.getConfig(), services.getConf());
             XConfiguration.copy(hdfsUnit.getFileSystem().getConf(), services.getConf());
             Configuration configuration = new Configuration();
-            configuration.addResource("oozie-site.xml");
+            configuration.addResource("oozie-site.prairie.xml");
             XConfiguration.copy(configuration, services.getConf());
             String classes = services.getConf().get(Services.CONF_SERVICE_CLASSES);
             for (String excludedService : EXCLUDED_SERVICES) {

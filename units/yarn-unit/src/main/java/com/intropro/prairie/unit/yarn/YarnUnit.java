@@ -63,8 +63,8 @@ public class YarnUnit extends HadoopUnit {
         bootConf.set("hadoop.proxyuser." + user + ".groups", "*");
         bootConf.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
         bootConf.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
-        bootConf.addResource("yarn-site.xml");
-        bootConf.addResource("mapred-site.xml");
+        bootConf.addResource("yarn-site.prairie.xml");
+        bootConf.addResource("mapred-site.prairie.xml");
         miniMR = new MiniMRYarnCluster(NAME);
         miniMR.init(bootConf);
         miniMR.start();
@@ -80,7 +80,7 @@ public class YarnUnit extends HadoopUnit {
     }
 
     public void dumpConfigs(File confDir) throws IOException {
-        FileWriter configWriter = new FileWriter(new File(confDir, "yarn-site.xml"));
+        FileWriter configWriter = new FileWriter(new File(confDir, "yarn-site.prairie.xml"));
         getConfig().writeXml(configWriter);
         configWriter.close();
     }

@@ -51,7 +51,7 @@ public class HdfsUnit extends HadoopUnit {
     @Override
     public void init() throws InitUnitException {
         Configuration conf = createConfig();
-        conf.addResource("hdfs-site.xml");
+        conf.addResource("hdfs-site.prairie.xml");
         conf.set("hdfs.minidfs.basedir", getTmpDir().toString());
         try {
             miniDFSCluster = new MiniDFSCluster.Builder(conf).build();

@@ -43,7 +43,7 @@ public class PigUnit extends HadoopUnit {
     @Override
     public Configuration getConfig() {
         Configuration configuration = new Configuration(yarnUnit.getConfig());
-        configuration.addResource("pig-site.xml");
+        configuration.addResource("pig-site.prairie.xml");
         return configuration;
     }
 
