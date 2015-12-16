@@ -56,6 +56,9 @@ public abstract class BaseUnit implements Unit {
         clearOldDTmpDirectories();
         try {
             tmpDir = Files.createTempDirectory(GLOBAL_TMP_DIR, unitName);
+            tmpDir.toFile().setExecutable(true, false);
+            tmpDir.toFile().setReadable(true, false);
+            tmpDir.toFile().setWritable(true, false);
             LOGGER.info("Created " + unitName + " tmp directory: " + tmpDir);
         } catch (IOException e) {
             throw new RuntimeException("Failed to create tmp dir inside: " + GLOBAL_TMP_DIR, e);
@@ -132,7 +135,4 @@ public abstract class BaseUnit implements Unit {
         return script;
     }
 
-    public static void main(String[] args) {
-        LOGGER.info("Info message");
-    }
 }

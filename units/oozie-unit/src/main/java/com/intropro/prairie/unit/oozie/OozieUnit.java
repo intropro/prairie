@@ -20,8 +20,6 @@ import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.oozie.DagEngine;
 import org.apache.oozie.LocalOozieClient;
 import org.apache.oozie.client.OozieClientException;
@@ -31,6 +29,7 @@ import org.apache.oozie.test.EmbeddedServletContainer;
 import org.apache.oozie.util.XConfiguration;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +48,7 @@ public class OozieUnit extends HadoopUnit {
     private Services services;
 
     private File actionConfDir;
+    private File hadoopConfDir;
 
     @BigDataUnit
     private HdfsUnit hdfsUnit;
@@ -70,26 +70,13 @@ public class OozieUnit extends HadoopUnit {
         confDir.mkdirs();
         File dataDir = new File(getTmpDir().toFile(), "data");
         dataDir.mkdirs();
-        actionConfDir = new File(getTmpDir().toFile(), "action-conf");
-        actionConfDir.mkdirs();
 
-        try {
-            hdfsUnit.getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/", user));
-            hdfsUnit.getFileSystem().setOwner(new org.apache.hadoop.fs.Path("/user/", user), user, user);
-        } catch (IOException e) {
-            throw new InitUnitException("Failed on hdfs directories initialization", e);
-        }
         System.setProperty("oozie.test.metastore.server", "false");
         System.setProperty("oozie.data.dir", dataDir.getAbsolutePath());
         System.setProperty("oozie.home.dir", getTmpDir().toString());
-        System.setProperty(XLogService.LOG4J_FILE, "oozie-log4j.properties");
-        String log4jFile = System.getProperty(XLogService.LOG4J_FILE, null);
-        if (log4jFile == null) {
-            System.setProperty(XLogService.LOG4J_FILE, "localoozie-log4j.properties");
-        }
-        File yarnConfigFile;
         try {
-            yarnConfigFile = yarnUnit.dumpConfigs();
+            writeActionConfigs();
+            writeHadoopConfigs();
         } catch (IOException e) {
             throw new InitUnitException("Failed to dump yarn configs", e);
         }
@@ -97,18 +84,10 @@ public class OozieUnit extends HadoopUnit {
         try {
             services = new Services();
             services.getConf().set("oozie.service.HadoopAccessorService.hadoop.configurations",
-                    "*=" + yarnConfigFile.getParent());
+                    "*=" + hadoopConfDir.getAbsolutePath());
             services.getConf().set("oozie.service.HadoopAccessorService.action.configurations",
                     "*=" + actionConfDir.getAbsolutePath());
-            services.getConf().set(JPAService.CONF_CREATE_DB_SCHEMA, "true");
-            services.getConf().set("mapred.job.tracker", YarnConfiguration.RM_ADDRESS);
-            services.getConf().set("mapreduce.framework.name", "yarn");
-            XConfiguration.copy(createConfig(), services.getConf());
-            XConfiguration.copy(yarnUnit.getConfig(), services.getConf());
-            XConfiguration.copy(hdfsUnit.getFileSystem().getConf(), services.getConf());
-            Configuration configuration = new Configuration();
-            configuration.addResource("oozie-site.prairie.xml");
-            XConfiguration.copy(configuration, services.getConf());
+            XConfiguration.copy(gatherConfigs(), services.getConf());
             String classes = services.getConf().get(Services.CONF_SERVICE_CLASSES);
             for (String excludedService : EXCLUDED_SERVICES) {
                 classes = classes.replaceAll(excludedService + "\\s?,?", "");
@@ -117,14 +96,6 @@ public class OozieUnit extends HadoopUnit {
             services.init();
         } catch (ServiceException e) {
             throw new InitUnitException("Failed to start oozie component", e);
-        } catch (IOException e) {
-            throw new InitUnitException("Failed to get file system", e);
-        }
-
-        if (log4jFile != null) {
-            System.setProperty(XLogService.LOG4J_FILE, log4jFile);
-        } else {
-            System.getProperties().remove(XLogService.LOG4J_FILE);
         }
 
         container = new EmbeddedServletContainer("oozie");
@@ -137,7 +108,38 @@ public class OozieUnit extends HadoopUnit {
         String callbackUrl = container.getServletURL("/callback");
         services.getConf().set(CallbackService.CONF_BASE_URL, callbackUrl);
         oozieClient = getClient();
-        UserGroupInformation.createUserForTesting("hive", new String[]{"hive"});
+    }
+
+    @Override
+    protected Configuration gatherConfigs() {
+        Configuration configuration = super.gatherConfigs();
+        configuration.addResource("oozie-site.prairie.xml");
+        return configuration;
+    }
+
+    private void writeActionConfigs() throws IOException {
+        actionConfDir = new File(getTmpDir().toFile(), "action-conf");
+        File defaultActionConfDir = new File(actionConfDir, "default");
+        defaultActionConfDir.mkdirs();
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(defaultActionConfDir, "yarn-site.xml"));
+        yarnUnit.getConfig().writeXml(fileOutputStream);
+        fileOutputStream.close();
+        fileOutputStream = new FileOutputStream(new File(defaultActionConfDir, "hdfs-site.xml"));
+        hdfsUnit.getConfig().writeXml(fileOutputStream);
+        fileOutputStream.close();
+    }
+
+    private void writeHadoopConfigs() throws IOException {
+        hadoopConfDir = new File(getTmpDir().toFile(), "hadoop-conf");
+        new File(hadoopConfDir, "default").mkdirs();
+        Configuration yarnConfigs = yarnUnit.getConfig();
+        yarnConfigs.set("mapreduce.framework.name", "yarn");
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(hadoopConfDir, "yarn-site.xml"));
+        yarnConfigs.writeXml(fileOutputStream);
+        fileOutputStream.close();
+        fileOutputStream = new FileOutputStream(new File(hadoopConfDir, "hdfs-site.xml"));
+        hdfsUnit.getConfig().writeXml(fileOutputStream);
+        fileOutputStream.close();
     }
 
     @Override

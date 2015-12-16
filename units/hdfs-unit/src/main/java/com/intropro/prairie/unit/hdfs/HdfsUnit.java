@@ -44,21 +44,34 @@ public class HdfsUnit extends HadoopUnit {
 
     private ByLineComparator byLineComparator = new ByLineComparator();
 
+    private String user = System.getProperty("user.name");
+
     public HdfsUnit() {
         super("hdfs");
     }
 
     @Override
     public void init() throws InitUnitException {
-        Configuration conf = createConfig();
-        conf.addResource("hdfs-site.prairie.xml");
-        conf.set("hdfs.minidfs.basedir", getTmpDir().toString());
         try {
-            miniDFSCluster = new MiniDFSCluster.Builder(conf).build();
+            miniDFSCluster = new MiniDFSCluster.Builder(gatherConfigs()).build();
             miniDFSCluster.waitClusterUp();
+            createHomeDirectory();
         } catch (IOException e) {
             throw new InitUnitException("Failed to start hdfs", e);
         }
+    }
+
+    @Override
+    protected Configuration gatherConfigs() {
+        Configuration conf = super.gatherConfigs();
+        conf.addResource("hdfs-site.prairie.xml");
+        conf.set("hdfs.minidfs.basedir", getTmpDir().toString());
+        return conf;
+    }
+
+    private void createHomeDirectory() throws IOException {
+        getFileSystem().mkdirs(new org.apache.hadoop.fs.Path("/user/", user));
+        getFileSystem().setOwner(new org.apache.hadoop.fs.Path("/user/", user), user, user);
     }
 
     @Override

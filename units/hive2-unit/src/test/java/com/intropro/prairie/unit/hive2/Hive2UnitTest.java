@@ -8,7 +8,6 @@ import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.BigDataUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -94,14 +93,6 @@ public class Hive2UnitTest {
         placeholders.put("TEST_TABLE1_2_LOC", "/data/test_table1_2");
         hive2Unit.execute(query, placeholders);
         hive2Unit.compare("SELECT * FROM test_table1_2;", "hive/external/test_table.csv", new SvFormat(',')).assertEquals();
-    }
-
-    @Test
-    public void testCreateDataDir() throws Exception {
-        Path testHiveDir = hive2Unit.createDataDir("/data/hive");
-        FileStatus fileStatus = hdfsUnit.getFileSystem().getFileStatus(testHiveDir);
-        Assert.assertEquals(Hive2Unit.HIVE_USER, fileStatus.getOwner());
-        Assert.assertEquals(Hive2Unit.HIVE_GROUP, fileStatus.getGroup());
     }
 
     @Test

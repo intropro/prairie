@@ -115,7 +115,7 @@ public class OozieUnitTest {
         scriptOutputStream.close();
 
         Path hiveDataDir = new Path("/data/hive");
-        hiveUnit.createDataDir("/data/hive");
+        hdfsUnit.getFileSystem().mkdirs(hiveDataDir);
         Path outDir = new Path(hiveDataDir, "table1_2");
         hdfsUnit.getFileSystem().mkdirs(outDir);
         hdfsUnit.getFileSystem().setOwner(outDir, "oozie", "oozie");

@@ -25,15 +25,15 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceScheduler;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by presidentio on 04.09.15.
  */
 public class YarnUnit extends HadoopUnit {
+
+    private static final Logger LOGGER = LogManager.getLogger(YarnUnit.class);
 
     private static final String NAME = "prairie-yarn";
 
@@ -51,37 +51,37 @@ public class YarnUnit extends HadoopUnit {
 
     @Override
     public void init() throws InitUnitException {
-        YarnConfiguration bootConf = new YarnConfiguration(createConfig());
-        try {
-            bootConf.addResource(hdfsUnit.getFileSystem().getConf());
-        } catch (IOException e) {
-            throw new InitUnitException("Failed to get file system", e);
-        }
-        bootConf.set("mapreduce.task.tmp.dir", getTmpDir().toString());
-        String user = System.getProperty("user.name");
-        bootConf.set("hadoop.proxyuser." + user + ".hosts", "*");
-        bootConf.set("hadoop.proxyuser." + user + ".groups", "*");
-        bootConf.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
-        bootConf.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
-        bootConf.addResource("yarn-site.prairie.xml");
-        bootConf.addResource("mapred-site.prairie.xml");
         miniMR = new MiniMRYarnCluster(NAME);
-        miniMR.init(bootConf);
+        miniMR.init(gatherConfigs());
         miniMR.start();
     }
 
     @Override
+    protected YarnConfiguration gatherConfigs() {
+        YarnConfiguration yarnConfigs = new YarnConfiguration(super.gatherConfigs());
+        yarnConfigs.addResource(hdfsUnit.getConfig());
+        yarnConfigs.set("mapreduce.task.tmp.dir", getTmpDir().toString());
+        String user = System.getProperty("user.name");
+        yarnConfigs.set("hadoop.proxyuser." + user + ".hosts", "*");
+        yarnConfigs.set("hadoop.proxyuser." + user + ".groups", "*");
+        yarnConfigs.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
+        yarnConfigs.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
+        yarnConfigs.addResource("mapred-site.prairie.xml");
+        yarnConfigs.addResource("yarn-site.prairie.xml");
+        return yarnConfigs;
+    }
+
+    @Override
     public void destroy() throws DestroyUnitException {
-        miniMR.stop();
+        if (miniMR != null) {
+            miniMR.stop();
+        }
     }
 
+    @Override
     public Configuration getConfig() {
-        return new Configuration(miniMR.getConfig());
-    }
-
-    public void dumpConfigs(File confDir) throws IOException {
-        FileWriter configWriter = new FileWriter(new File(confDir, "yarn-site.prairie.xml"));
-        getConfig().writeXml(configWriter);
-        configWriter.close();
+        Configuration configuration = new Configuration(miniMR.getConfig());
+        configuration.set("mapreduce.framework.name", gatherConfigs().get("mapreduce.framework.name"));
+        return configuration;
     }
 }

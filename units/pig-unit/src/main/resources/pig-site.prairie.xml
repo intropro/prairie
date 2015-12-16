@@ -3,4 +3,8 @@
         <name>exectype</name>
         <value>MR</value>
     </property>
+    <property>
+        <name>pig.use.overriden.hadoop.configs</name>
+        <value>true</value>
+    </property>
 </configuration>

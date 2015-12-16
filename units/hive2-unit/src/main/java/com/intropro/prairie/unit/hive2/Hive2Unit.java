@@ -15,6 +15,8 @@ package com.intropro.prairie.unit.hive2;
 
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
+import com.intropro.prairie.format.Format;
+import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.exception.FormatException;
 import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.Version;
@@ -23,8 +25,6 @@ import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
-import com.intropro.prairie.format.Format;
-import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -47,11 +47,10 @@ public class Hive2Unit extends HadoopUnit {
 
     public static final Version VERSION = getVersion();
 
-    private static String driverName = "org.apache.hive.jdbc.HiveDriver";
+    private static final String DRIVER_NAME = "org.apache.hive.jdbc.HiveDriver";
     private static final long WAIT_START_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 
-    public static final String HIVE_USER = "hive";
-    public static final String HIVE_GROUP = "hive";
+    public static final String USER = System.getProperty("user.name");
     public static final String HIVE_HOST = "localhost";
 
     public static final String HIVE_HOME = "/user/hive";
@@ -84,22 +83,29 @@ public class Hive2Unit extends HadoopUnit {
         } catch (IOException e) {
             throw new InitUnitException("Failed to create hive home directory: " + HIVE_HOME, e);
         }
-        port = PortProvider.nextPort();
-        HiveConf hiveConf = new HiveConf(yarnUnit.getConfig(), Hive2Unit.class);
-        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
-        hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().toString());
-        hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
-        metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
-        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
         hiveServer = new HiveServer2();
-        hiveServer.init(hiveConf);
+        hiveServer.init(gatherConfigs());
         hiveServer.start();
         initConnection();
     }
 
+    @Override
+    protected HiveConf gatherConfigs() {
+        port = PortProvider.nextPort();
+        HiveConf hiveConf = new HiveConf(super.gatherConfigs(), Hive2Unit.class);
+        hiveConf.addResource(yarnUnit.getConfig());
+        hiveConf.addResource("hive-site.prairie.xml");
+        hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().toString());
+        hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
+        hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
+        metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
+        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
+        return hiveConf;
+    }
+
     public void initConnection() throws InitUnitException {
         try {
-            Class.forName(driverName);
+            Class.forName(DRIVER_NAME);
         } catch (ClassNotFoundException e) {
             throw new InitUnitException("Could not load hive jdbc driver", e);
         }
@@ -110,7 +116,7 @@ public class Hive2Unit extends HadoopUnit {
                 int hivePort = getConfig().getIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT);
                 jdbcUrl = String.format("jdbc:hive2://%s:%s/default", HIVE_HOST, hivePort);
                 LOGGER.info("Connecting to " + jdbcUrl);
-                connection = DriverManager.getConnection(jdbcUrl, HIVE_USER, "");
+                connection = DriverManager.getConnection(jdbcUrl, USER, "");
                 break;
             } catch (SQLException e) {
                 mostRecentException = e;
@@ -157,7 +163,6 @@ public class Hive2Unit extends HadoopUnit {
 
     public HiveConf getConfig() {
         HiveConf hiveConf = new HiveConf(hiveServer.getHiveConf());
-        hiveConf.addResource("hive-site.prairie.xml");
         return hiveConf;
     }
 
@@ -197,13 +202,6 @@ public class Hive2Unit extends HadoopUnit {
             LOGGER.info("Executing: " + scriptStatement);
             statement.execute(scriptStatement);
         }
-    }
-
-    public Path createDataDir(String path) throws IOException {
-        Path dataDirPath = new Path(path);
-        hdfsUnit.getFileSystem().mkdirs(dataDirPath);
-        hdfsUnit.getFileSystem().setOwner(dataDirPath, HIVE_USER, HIVE_GROUP);
-        return dataDirPath;
     }
 
     public CompareResponse<Map<String, String>> compare(String query, InputStream expectedStream,

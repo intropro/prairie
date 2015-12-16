@@ -31,4 +31,8 @@
         <name>oozie.service.JPAService.pool.max.active.conn</name>
         <value>10</value>
     </property>
+    <property>
+        <name>oozie.service.JPAService.create.db.schema</name>
+        <value>true</value>
+    </property>
 </configuration>

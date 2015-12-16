@@ -41,16 +41,22 @@ public class PigUnit extends HadoopUnit {
     }
 
     @Override
-    public Configuration getConfig() {
-        Configuration configuration = new Configuration(yarnUnit.getConfig());
+    public Configuration gatherConfigs() {
+        Configuration configuration = new Configuration(super.gatherConfigs());
+        configuration.addResource(yarnUnit.getConfig());
         configuration.addResource("pig-site.prairie.xml");
         return configuration;
     }
 
     @Override
+    public Configuration getConfig() {
+        return gatherConfigs();
+    }
+
+    @Override
     protected void init() throws InitUnitException {
         try {
-            PigContext pigContext = new PigContext(getConfig());
+            PigContext pigContext = new PigContext(gatherConfigs());
             pigServer = new PigServer(pigContext);
         } catch (PigException e) {
             throw new InitUnitException(e);

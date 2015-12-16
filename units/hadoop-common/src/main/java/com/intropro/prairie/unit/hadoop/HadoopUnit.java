@@ -16,10 +16,6 @@ package com.intropro.prairie.unit.hadoop;
 import com.intropro.prairie.unit.common.BaseUnit;
 import org.apache.hadoop.conf.Configuration;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 /**
  * Created by presidentio on 9/18/15.
  */
@@ -29,26 +25,12 @@ public abstract class HadoopUnit extends BaseUnit {
         super(unitName);
     }
 
-    protected Configuration createConfig() {
+    protected Configuration gatherConfigs() {
         Configuration conf = new Configuration();
-        conf.addResource("prairie-site.xml");
         conf.addResource("core-site.prairie.xml");
         conf.set("hadoop.tmp.dir", getTmpDir().toString());
+        conf.addResource("prairie-site.xml");
         return conf;
-    }
-
-    public File dumpConfigs() throws IOException {
-        File confFile = new File(getConfDir(), getUnitName() + "-site.xml");
-        FileWriter configWriter = new FileWriter(confFile);
-        getConfig().writeXml(configWriter);
-        configWriter.close();
-        return confFile;
-    }
-
-    private File getConfDir(){
-        File confDir = new File(getTmpDir().toFile(), "conf");
-        confDir.mkdirs();
-        return confDir;
     }
 
     public abstract Configuration getConfig();
