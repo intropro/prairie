@@ -1,8 +1,8 @@
 package com.intropro.prairie.unit.hdfs;
 
 import com.intropro.prairie.format.text.TextFormat;
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -16,10 +16,10 @@ import java.io.InputStream;
 /**
  * Created by presidentio on 03.09.15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class HdfsUnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
     @Test

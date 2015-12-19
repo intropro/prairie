@@ -21,13 +21,14 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Created by presidentio on 10/7/15.
  */
-public class SvFormatReader extends AbstractFormatReader<Map<String, String>> {
+public class SvFormatReader extends AbstractFormatReader<Map<String, Object>> {
 
     private InputStreamReader inputStream;
     private CSVParser csvParser;
@@ -40,7 +41,7 @@ public class SvFormatReader extends AbstractFormatReader<Map<String, String>> {
     }
 
     @Override
-    public Map<String, String> next() throws IOException {
+    public Map<String, Object> next() throws IOException {
         if (csvParser == null) {
             csvParser = CSVFormat.DEFAULT.withHeader().withDelimiter(delimiter).parse(inputStream);
             iterator = csvParser.iterator();
@@ -49,7 +50,7 @@ public class SvFormatReader extends AbstractFormatReader<Map<String, String>> {
             return null;
         }
         CSVRecord csvRecord = iterator.next();
-        return csvRecord.toMap();
+        return new HashMap<String, Object>(csvRecord.toMap());
     }
 
     @Override

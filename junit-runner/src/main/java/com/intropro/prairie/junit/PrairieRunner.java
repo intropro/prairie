@@ -24,13 +24,13 @@ import org.junit.runners.model.Statement;
 /**
  * Created by presidentio on 04.09.15.
  */
-public class BigDataTestRunner extends BlockJUnit4ClassRunner {
+public class PrairieRunner extends BlockJUnit4ClassRunner {
 
     private Class<?> clazz;
 
     private DependencyResolver dependencyResolver;
 
-    public BigDataTestRunner(Class<?> klass) throws InitializationError {
+    public PrairieRunner(Class<?> klass) throws InitializationError {
         super(klass);
         this.clazz = klass;
         dependencyResolver = new DependencyResolver();

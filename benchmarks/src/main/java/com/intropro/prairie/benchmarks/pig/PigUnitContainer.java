@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.pig;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.pig.PigUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.pig.PigUnit;
  */
 public class PigUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private PigUnit pigUnit;
 
 }

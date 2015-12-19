@@ -16,7 +16,7 @@ package com.intropro.prairie.unit.common.exception;
 /**
  * Created by presidentio on 03.09.15.
  */
-public class EmbeddedComponentException extends BigDataTestFrameworkException {
+public class EmbeddedComponentException extends PrairieException {
 
     public EmbeddedComponentException() {
         super();

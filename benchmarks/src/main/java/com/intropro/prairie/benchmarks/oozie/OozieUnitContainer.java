@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.oozie;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.oozie.OozieUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.oozie.OozieUnit;
  */
 public class OozieUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private OozieUnit oozieUnit;
 
 }

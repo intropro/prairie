@@ -15,7 +15,7 @@ package com.intropro.prairie.unit.kafka;
 
 import com.intropro.prairie.unit.common.BaseUnit;
 import com.intropro.prairie.unit.common.PortProvider;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.zookeeper.ZookeeperUnit;
@@ -44,7 +44,7 @@ public class KafkaUnit extends BaseUnit {
 
     private Properties properties;
 
-    @BigDataUnit
+    @PrairieUnit
     private ZookeeperUnit zookeeperUnit;
 
     public KafkaUnit() {

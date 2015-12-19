@@ -1,8 +1,8 @@
 package com.intropro.prairie.unit.kafka;
 
 import com.intropro.prairie.comparator.ByLineComparator;
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.utils.EventChecker;
 import com.intropro.prairie.utils.Waiter;
 import org.apache.commons.io.IOUtils;
@@ -15,10 +15,10 @@ import java.util.List;
 /**
  * Created by presidentio on 10/15/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class KafkaUnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private KafkaUnit kafkaUnit;
 
     private ByLineComparator<String> byLineComparator = new ByLineComparator<>();

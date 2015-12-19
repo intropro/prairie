@@ -13,7 +13,7 @@
  */
 package com.intropro.prairie.unit.oozie;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
@@ -50,10 +50,10 @@ public class OozieUnit extends HadoopUnit {
     private File actionConfDir;
     private File hadoopConfDir;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
     private org.apache.oozie.client.OozieClient oozieClient;

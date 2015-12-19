@@ -1,8 +1,8 @@
 package com.intropro.prairie.unit.flume;
 
 import com.intropro.prairie.comparator.ByLineComparator;
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.utils.EventChecker;
 import com.intropro.prairie.utils.FileUtils;
 import com.intropro.prairie.utils.Waiter;
@@ -20,13 +20,13 @@ import java.util.Properties;
 /**
  * Created by presidentio on 10/14/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class FlumeUnitTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @BigDataUnit
+    @PrairieUnit
     private FlumeUnit flumeUnit;
 
     private ByLineComparator<String> byLineComparator = new ByLineComparator<>();

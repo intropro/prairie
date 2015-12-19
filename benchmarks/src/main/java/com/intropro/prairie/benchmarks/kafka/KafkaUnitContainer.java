@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.kafka;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.kafka.KafkaUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.kafka.KafkaUnit;
  */
 public class KafkaUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private KafkaUnit kafkaUnit;
 
 }

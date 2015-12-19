@@ -1,8 +1,8 @@
 package com.intropro.prairie.benchmarks.yarn;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
@@ -34,16 +34,16 @@ public class YarnBenchmarks {
     private String inputPath = "/YarnUnitTest/input";
     private String input = "some text for count job\nwith text";
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
     private DependencyResolver dependencyResolver;
 
     @Setup(Level.Invocation)
-    public void init() throws BigDataTestFrameworkException, IOException {
+    public void init() throws PrairieException, IOException {
         dependencyResolver = new DependencyResolver();
         dependencyResolver.resolve(this);
         hdfsUnit.getFileSystem().mkdirs(new Path(inputPath));
@@ -54,7 +54,7 @@ public class YarnBenchmarks {
     }
 
     @Benchmark
-    public void measureRun() throws BigDataTestFrameworkException, InterruptedException, ClassNotFoundException, IOException {
+    public void measureRun() throws PrairieException, InterruptedException, ClassNotFoundException, IOException {
         createAndSubmitJob();
 
     }

@@ -4,8 +4,8 @@ import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.EntryComparator;
 import com.intropro.prairie.format.avro.AvroFormat;
 import com.intropro.prairie.format.json.JsonFormat;
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.avro.Schema;
 import org.apache.avro.mapred.AvroKey;
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * Created by presidentio on 04.09.15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class MapreduceAvroTest {
 
     private String inputPath = "/MapreduceAvroTest/input";
@@ -36,10 +36,10 @@ public class MapreduceAvroTest {
 
     private EntryComparator<String> byLineComparator = new ByLineComparator<String>();
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
     @Test

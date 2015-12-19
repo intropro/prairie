@@ -1,8 +1,8 @@
 package com.intropro.prairie.unit.hive2;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Hive2UnitDemo {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
     public void runDemo() throws SQLException {
@@ -25,7 +25,7 @@ public class Hive2UnitDemo {
         }
     }
 
-    public static void main(String[] args) throws BigDataTestFrameworkException, SQLException {
+    public static void main(String[] args) throws PrairieException, SQLException {
         DependencyResolver dependencyResolver = new DependencyResolver();
         Hive2UnitDemo hive2UnitDemo = new Hive2UnitDemo();
         dependencyResolver.resolve(hive2UnitDemo);

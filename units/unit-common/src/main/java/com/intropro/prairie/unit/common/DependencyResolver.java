@@ -13,8 +13,8 @@
  */
 package com.intropro.prairie.unit.common;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 
 import java.lang.reflect.Field;
@@ -33,39 +33,39 @@ public class DependencyResolver {
 
     private Map<Class, List<Object>> dependencies = new HashMap<Class, List<Object>>();
 
-    public void resolve(Object object) throws BigDataTestFrameworkException {
+    public void resolve(Object object) throws PrairieException {
         resolve(object, object.getClass());
     }
 
-    private void resolve(Object object, Class clazz) throws BigDataTestFrameworkException {
+    private void resolve(Object object, Class clazz) throws PrairieException {
         Class parentClass = clazz.getSuperclass();
         if(parentClass != null && !parentClass.equals(Object.class)) {
             resolve(object, parentClass);
         }
         for (Field field : clazz.getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
+            PrairieUnit prairieUnit = field.getAnnotation(PrairieUnit.class);
+            if (prairieUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, object);
             }
         }
     }
 
-    public void resolveStatic(Class clazz) throws BigDataTestFrameworkException {
+    public void resolveStatic(Class clazz) throws PrairieException {
         for (Field field : clazz.getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
+            PrairieUnit prairieUnit = field.getAnnotation(PrairieUnit.class);
+            if (prairieUnit != null && Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, clazz);
             }
         }
     }
 
-    private void resolveDependency(Field field, Object ref) throws BigDataTestFrameworkException {
+    private void resolveDependency(Field field, Object ref) throws PrairieException {
         Class bigDataComponentClass = field.getType();
         if (Unit.class.isAssignableFrom(bigDataComponentClass)) {
             Unit unit = getUnit(bigDataComponentClass);
             setDependency(ref, field, unit);
         } else {
-            throw new BigDataTestFrameworkException(
+            throw new PrairieException(
                     String.format("%s doesn't implements EmbeddedComponent interface",
                             bigDataComponentClass.getSimpleName()));
         }
@@ -78,8 +78,8 @@ public class DependencyResolver {
 
     private void destroy(Object object, Class clazz) throws DestroyUnitException {
         for (Field field : clazz.getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
+            PrairieUnit prairieUnit = field.getAnnotation(PrairieUnit.class);
+            if (prairieUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 List<Object> links = dependencies.get(field.getType());
                 if(links != null) {
                     links.remove(object);
@@ -94,8 +94,8 @@ public class DependencyResolver {
 
     public void destroyStatic(Class clazz) throws DestroyUnitException {
         for (Field field : clazz.getClass().getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
+            PrairieUnit prairieUnit = field.getAnnotation(PrairieUnit.class);
+            if (prairieUnit != null && Modifier.isStatic(field.getModifiers())) {
                 List<Object> links = dependencies.get(field.getType());
                 if(links != null) {
                     links.remove(clazz);
@@ -126,7 +126,7 @@ public class DependencyResolver {
         }
     }
 
-    private <T extends Unit> T getUnit(Class<T> clazz) throws BigDataTestFrameworkException {
+    private <T extends Unit> T getUnit(Class<T> clazz) throws PrairieException {
         try {
             T embeddedComponent = (T) units.get(clazz);
             if (embeddedComponent == null) {
@@ -139,11 +139,11 @@ public class DependencyResolver {
             return embeddedComponent;
         } catch (InstantiationException | IllegalAccessException e) {
             units.remove(clazz);
-            throw new BigDataTestFrameworkException(e);
+            throw new PrairieException(e);
         }
     }
 
-    private void setDependency(Object target, Field field, Object dependency) throws BigDataTestFrameworkException {
+    private void setDependency(Object target, Field field, Object dependency) throws PrairieException {
         field.setAccessible(true);
         try {
             field.set(target, dependency);
@@ -154,7 +154,7 @@ public class DependencyResolver {
             }
             dependentObjects.add(target);
         } catch (IllegalAccessException e) {
-            throw new BigDataTestFrameworkException(
+            throw new PrairieException(
                     String.format("Field %s must be public", field.getName()));
         }
     }

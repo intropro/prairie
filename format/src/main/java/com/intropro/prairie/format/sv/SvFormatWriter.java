@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class SvFormatWriter implements OutputFormatWriter<Map<String, String>> {
+public class SvFormatWriter implements OutputFormatWriter<Map<String, Object>> {
 
     private Writer writer;
     private CSVPrinter csvPrinter;
@@ -39,12 +39,12 @@ public class SvFormatWriter implements OutputFormatWriter<Map<String, String>> {
     }
 
     @Override
-    public void write(Map<String, String> line) throws IOException {
+    public void write(Map<String, Object> line) throws IOException {
         if (csvPrinter == null) {
             headers = line.keySet().toArray(new String[line.size()]);
             csvPrinter = CSVFormat.DEFAULT.withDelimiter(delimiter).withHeader(headers).print(writer);
         }
-        String[] values = new String[headers.length];
+        Object[] values = new Object[headers.length];
         for (int i = 0; i < headers.length; i++) {
             values[i] = line.get(headers[i]);
         }

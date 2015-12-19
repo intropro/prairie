@@ -14,7 +14,7 @@
 package com.intropro.prairie.unit.yarn;
 
 import com.intropro.prairie.unit.cmd.CmdUnit;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
@@ -39,10 +39,10 @@ public class YarnUnit extends HadoopUnit {
 
     private MiniYARNCluster miniMR;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private CmdUnit cmdUnit;
 
     public YarnUnit() {

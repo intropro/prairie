@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.hive2;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.hive2.Hive2Unit;
  */
 public class Hive2UnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
 }

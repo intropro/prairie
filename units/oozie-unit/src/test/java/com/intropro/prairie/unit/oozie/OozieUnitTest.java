@@ -6,9 +6,9 @@ import com.intropro.prairie.comparator.EntryComparator;
 import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
-import com.intropro.prairie.junit.BigDataTestRunner;
+import com.intropro.prairie.junit.PrairieRunner;
 import com.intropro.prairie.unit.cmd.CmdUnit;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
@@ -37,22 +37,22 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by presidentio on 9/14/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class OozieUnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private OozieUnit oozieUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hiveUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private CmdUnit cmdUnit;
 
     private EntryComparator<String> byLineComparator = new ByLineComparator<>();

@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.flume;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.flume.FlumeUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.flume.FlumeUnit;
  */
 public class FlumeUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private FlumeUnit flumeUnit;
 
 }

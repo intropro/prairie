@@ -1,7 +1,7 @@
 package com.intropro.prairie.unit.yarn;
 
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.comparator.EntryComparator;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by presidentio on 04.09.15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class YarnUnitTest {
 
     private String input = "some text for count job\nwith text";
@@ -38,10 +38,10 @@ public class YarnUnitTest {
 
     private EntryComparator<String> byLineComparator = new ByLineComparator<String>();
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
     @Test

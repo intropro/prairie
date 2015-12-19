@@ -20,7 +20,7 @@ import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.exception.FormatException;
 import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.Version;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
@@ -57,10 +57,10 @@ public class Hive2Unit extends HadoopUnit {
 
     private HiveServer2 hiveServer;
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
     private ByLineComparator byLineComparator = new ByLineComparator();
@@ -205,10 +205,10 @@ public class Hive2Unit extends HadoopUnit {
     }
 
     public CompareResponse<Map<String, String>> compare(String query, InputStream expectedStream,
-                                                        Format<Map<String, String>> expectedFormat) throws IOException, SQLException {
+                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
         List<Map<String, String>> queryResult = executeQuery(query);
         try {
-            InputFormatReader<Map<String, String>> expectedReader = expectedFormat.createReader(expectedStream);
+            InputFormatReader<Map<String, Object>> expectedReader = expectedFormat.createReader(expectedStream);
             CompareResponse<Map<String, String>> compareResponse = byLineComparator.compare(expectedReader.all(), queryResult);
             expectedReader.close();
             expectedReader.close();
@@ -219,13 +219,13 @@ public class Hive2Unit extends HadoopUnit {
     }
 
     public CompareResponse<Map<String, String>> compare(String query, Path expectedPath,
-                                                        Format<Map<String, String>> expectedFormat) throws IOException, SQLException {
+                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
         InputStream retrieved = hdfsUnit.getFileSystem().open(expectedPath);
         return compare(query, retrieved, expectedFormat);
     }
 
     public CompareResponse<Map<String, String>> compare(String query, String expectedResource,
-                                                        Format<Map<String, String>> expectedFormat) throws IOException, SQLException {
+                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
         InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
         return compare(query, expectedStream, expectedFormat);
     }

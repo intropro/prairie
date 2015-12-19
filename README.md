@@ -3,31 +3,22 @@
 ###Overview
 This framework can help you to write tests for your big data products. It supports majority modern BigData technologies.
 
+Notice: API can be changed before version 1.1.0
+
 ###Look closer
 Framework consists of *units*. Unit is the service which responsible for one of the technologies(yarn, hive, etc).
 Also they have useful methods which can be use in you tests.
 Complex of units emulate cluster behavior.
 Units can have dependencies to another units. For example yarn depends on hdfs.
-You don't need to maintain this dependencies, they'll be create automatically.
-
-###JUnit
-Framework have junit runner *BigDataTestRunner* which initialize all units, and resolve inner dependencies.
-To use it you need to put dependency to your pom.xml:
-```xml
-<dependency>
-    <groupId>com.intropro.prairie</groupId>
-    <artifactId>junit-runner</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
+You don't need to maintain this dependencies, they'll be created automatically.
 
 ####Example of hive unit with junit
 ```java
 
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class Hive2UnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
     @Test
@@ -57,7 +48,7 @@ More examples you can find in test directories for each unit:
 ```java
 public class Hive2UnitDemo {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
     public void runDemo() throws SQLException {
@@ -69,7 +60,7 @@ public class Hive2UnitDemo {
         }
     }
 
-    public static void main(String[] args) throws BigDataTestFrameworkException, SQLException {
+    public static void main(String[] args) throws PrairieException, SQLException {
         DependencyResolver dependencyResolver = new DependencyResolver();
         Hive2UnitDemo hive2UnitDemo = new Hive2UnitDemo();
         dependencyResolver.resolve(hive2UnitDemo);
@@ -111,6 +102,17 @@ and replace unit.version and unit.id with data from table below
 |Zookeeper|3.4.6|
 |Kafka|0.8.2.2|
 |Pig|0.15.0|
+
+###JUnit
+Framework have junit runner *PrairieRunner* which initialize all units, and resolve inner dependencies.
+To use it you need to put dependency to your pom.xml:
+```xml
+<dependency>
+    <groupId>com.intropro.prairie</groupId>
+    <artifactId>junit-runner</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 Licensing
 =========

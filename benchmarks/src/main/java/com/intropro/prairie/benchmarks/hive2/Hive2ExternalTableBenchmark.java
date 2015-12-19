@@ -3,8 +3,8 @@ package com.intropro.prairie.benchmarks.hive2;
 import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.text.TextFormat;
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 @Threads(1)
 public class Hive2ExternalTableBenchmark {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
     private DependencyResolver dependencyResolver;
@@ -41,7 +41,7 @@ public class Hive2ExternalTableBenchmark {
     private Map<String, String> placeholders;
 
     @Setup(Level.Invocation)
-    public void init() throws BigDataTestFrameworkException, SQLException, IOException {
+    public void init() throws PrairieException, SQLException, IOException {
         dependencyResolver = new DependencyResolver();
         dependencyResolver.resolve(this);
         String table1Location = "/data/test_table1";

@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class SvFormat implements Format<Map<String, String>> {
+public class SvFormat implements Format<Map<String, Object>> {
 
     private char delimiter;
 
@@ -33,12 +33,12 @@ public class SvFormat implements Format<Map<String, String>> {
     }
 
     @Override
-    public InputFormatReader<Map<String, String>> createReader(InputStream inputStream) {
+    public InputFormatReader<Map<String, Object>> createReader(InputStream inputStream) {
         return new SvFormatReader(inputStream, delimiter);
     }
 
     @Override
-    public OutputFormatWriter<Map<String, String>> createWriter(OutputStream outputStream) {
+    public OutputFormatWriter<Map<String, Object>> createWriter(OutputStream outputStream) {
         return new SvFormatWriter(outputStream, delimiter);
     }
 

@@ -19,7 +19,7 @@ public class CommonKeyValueFormatTest {
 
     @Parameterized.Parameters(name = "{index}: {0}({1})")
     public static Collection<Object[]> data() throws IOException {
-        List<Format<Map<String, String>>> formats = Arrays.<Format<Map<String, String>>>asList(new SvFormat(','), new SvFormat('|'));
+        List<Format<Map<String, Object>>> formats = Arrays.<Format<Map<String, Object>>>asList(new SvFormat(','), new SvFormat('|'));
         List<Map<String, String>> data = new ArrayList<>();
         Map<String, String> raw = new HashMap<>();
         raw.put("field1", "value1");

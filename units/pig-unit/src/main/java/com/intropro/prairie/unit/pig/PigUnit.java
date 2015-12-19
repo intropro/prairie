@@ -13,7 +13,7 @@
  */
 package com.intropro.prairie.unit.pig;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class PigUnit extends HadoopUnit {
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
     private PigServer pigServer;

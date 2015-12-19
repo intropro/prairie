@@ -1,7 +1,7 @@
 package com.intropro.prairie.unit.zookeeper;
 
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,10 +9,10 @@ import org.junit.runner.RunWith;
 /**
  * Created by presidentio on 10/14/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class ZookeeperUnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private ZookeeperUnit zookeeperUnit;
 
     @Test

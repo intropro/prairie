@@ -20,10 +20,6 @@
             <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.intropro.prairie</groupId>
-            <artifactId>test-utils</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.flume</groupId>

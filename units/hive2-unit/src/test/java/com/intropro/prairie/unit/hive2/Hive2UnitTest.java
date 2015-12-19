@@ -3,9 +3,9 @@ package com.intropro.prairie.unit.hive2;
 import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
-import com.intropro.prairie.junit.BigDataTestRunner;
+import com.intropro.prairie.junit.PrairieRunner;
 import com.intropro.prairie.unit.common.Version;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.fs.Path;
@@ -23,13 +23,13 @@ import java.util.Map;
 /**
  * Created by presidentio on 07.09.15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class Hive2UnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
     @Test

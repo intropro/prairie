@@ -1,8 +1,8 @@
 package com.intropro.prairie.unit.flume;
 
 import com.intropro.prairie.comparator.ByLineComparator;
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.kafka.KafkaProducer;
 import com.intropro.prairie.unit.kafka.KafkaUnit;
 import com.intropro.prairie.utils.EventChecker;
@@ -20,15 +20,15 @@ import java.util.*;
 /**
  * Created by presidentio on 11/4/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class FlumeKafkaSourceTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @BigDataUnit
+    @PrairieUnit
     private FlumeUnit flumeUnit;
-    @BigDataUnit
+    @PrairieUnit
     private KafkaUnit kafkaUnit;
     private ByLineComparator<String> byLineComparator = new ByLineComparator<>();
 

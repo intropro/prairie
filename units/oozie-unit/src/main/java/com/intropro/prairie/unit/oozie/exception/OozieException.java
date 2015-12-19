@@ -13,12 +13,12 @@
  */
 package com.intropro.prairie.unit.oozie.exception;
 
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 
 /**
  * Created by presidentio on 9/18/15.
  */
-public class OozieException extends BigDataTestFrameworkException {
+public class OozieException extends PrairieException {
     public OozieException() {
         super();
     }

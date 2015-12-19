@@ -16,20 +16,20 @@ package com.intropro.prairie.unit.common.exception;
 /**
  * Created by presidentio on 04.09.15.
  */
-public class BigDataTestFrameworkException extends Exception {
-    public BigDataTestFrameworkException() {
+public class PrairieException extends Exception {
+    public PrairieException() {
         super();
     }
 
-    public BigDataTestFrameworkException(String message) {
+    public PrairieException(String message) {
         super(message);
     }
 
-    public BigDataTestFrameworkException(String message, Throwable cause) {
+    public PrairieException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public BigDataTestFrameworkException(Throwable cause) {
+    public PrairieException(Throwable cause) {
         super(cause);
     }
 }

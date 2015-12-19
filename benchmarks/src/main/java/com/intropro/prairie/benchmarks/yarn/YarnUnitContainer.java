@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.yarn;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.yarn.YarnUnit;
  */
 public class YarnUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private YarnUnit yarnUnit;
 
 }

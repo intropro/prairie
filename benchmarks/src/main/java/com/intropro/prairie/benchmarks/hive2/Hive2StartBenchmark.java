@@ -1,7 +1,7 @@
 package com.intropro.prairie.benchmarks.hive2;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import org.openjdk.jmh.annotations.*;
 
@@ -29,7 +29,7 @@ public class Hive2StartBenchmark {
     }
 
     @Benchmark
-    public void measureStart() throws BigDataTestFrameworkException {
+    public void measureStart() throws PrairieException {
         dependencyResolver.resolve(hive2UnitContainer);
     }
 

@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.zookeeper;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.zookeeper.ZookeeperUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.zookeeper.ZookeeperUnit;
  */
 public class ZookeeperUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private ZookeeperUnit zookeeperUnit;
 
 }

@@ -1,6 +1,6 @@
 package com.intropro.prairie.junit;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -10,13 +10,13 @@ import org.junit.runner.RunWith;
 /**
  * Created by presidentio on 11/10/15.
  */
-@RunWith(BigDataTestRunner.class)
-public class BigDataTestRunnerTest {
+@RunWith(PrairieRunner.class)
+public class Prairie {
 
-    @BigDataUnit
+    @PrairieUnit
     private static SimpleUnit simpleStaticUnit;
 
-    @BigDataUnit
+    @PrairieUnit
     private SimpleUnit simpleUnit;
 
     private boolean simpleInitedBefore = false;

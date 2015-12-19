@@ -1,7 +1,7 @@
 package com.intropro.prairie.unit.cmd;
 
-import com.intropro.prairie.junit.BigDataTestRunner;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.junit.PrairieRunner;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * Created by presidentio on 11/14/15.
  */
-@RunWith(BigDataTestRunner.class)
+@RunWith(PrairieRunner.class)
 public class CmdUnitTest {
 
-    @BigDataUnit
+    @PrairieUnit
     private CmdUnit cmdUnit;
 
     private String alias = "cmd-unit-test";

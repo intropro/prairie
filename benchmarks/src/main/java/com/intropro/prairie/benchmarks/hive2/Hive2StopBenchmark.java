@@ -1,7 +1,7 @@
 package com.intropro.prairie.benchmarks.hive2;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;
@@ -22,14 +22,14 @@ public class Hive2StopBenchmark {
     private DependencyResolver dependencyResolver;
 
     @Setup(Level.Invocation)
-    public void init() throws BigDataTestFrameworkException {
+    public void init() throws PrairieException {
         hive2UnitContainer = new Hive2UnitContainer();
         dependencyResolver = new DependencyResolver();
         dependencyResolver.resolve(hive2UnitContainer);
     }
 
     @Benchmark
-    public void measureStop() throws BigDataTestFrameworkException {
+    public void measureStop() throws PrairieException {
         dependencyResolver.destroy(hive2UnitContainer);
     }
 

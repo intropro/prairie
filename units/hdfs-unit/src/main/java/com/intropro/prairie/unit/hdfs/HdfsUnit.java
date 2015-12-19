@@ -19,7 +19,7 @@ import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
 import com.intropro.prairie.format.exception.FormatException;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
@@ -37,7 +37,7 @@ import java.io.SequenceInputStream;
 /**
  * Created by presidentio on 03.09.15.
  */
-@BigDataUnit
+@PrairieUnit
 public class HdfsUnit extends HadoopUnit {
 
     private MiniDFSCluster miniDFSCluster;

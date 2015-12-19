@@ -1,6 +1,6 @@
 package com.intropro.prairie.benchmarks.hdfs;
 
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 
 /**
@@ -8,7 +8,7 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
  */
 public class HdfsUnitContainer {
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
 }

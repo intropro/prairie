@@ -24,10 +24,6 @@
             <groupId>com.intropro.prairie</groupId>
             <artifactId>zookeeper-unit</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.intropro.prairie</groupId>
-            <artifactId>test-utils</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>

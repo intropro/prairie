@@ -1,8 +1,8 @@
 package com.intropro.prairie.benchmarks.hive2;
 
 import com.intropro.prairie.unit.common.DependencyResolver;
-import com.intropro.prairie.unit.common.annotation.BigDataUnit;
-import com.intropro.prairie.unit.common.exception.BigDataTestFrameworkException;
+import com.intropro.prairie.unit.common.annotation.PrairieUnit;
+import com.intropro.prairie.unit.common.exception.PrairieException;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
@@ -23,16 +23,16 @@ import java.util.concurrent.TimeUnit;
 @Threads(1)
 public class Hive2Benchmark {
 
-    @BigDataUnit
+    @PrairieUnit
     private Hive2Unit hive2Unit;
 
-    @BigDataUnit
+    @PrairieUnit
     private HdfsUnit hdfsUnit;
 
     private DependencyResolver dependencyResolver;
 
     @Setup(Level.Invocation)
-    public void init() throws BigDataTestFrameworkException, SQLException {
+    public void init() throws PrairieException, SQLException {
         dependencyResolver = new DependencyResolver();
         dependencyResolver.resolve(this);
         String createTableScript = "create table test_table (id bigint, field2 string)";
