@@ -103,7 +103,11 @@ public class PrairieRunner extends BlockJUnit4ClassRunner {
             try {
                 dependencyResolver.destroy(target);
             } catch (DestroyUnitException e) {
-                e.printStackTrace();
+                if (error == null) {
+                    throw e;
+                } else {
+                    e.printStackTrace();
+                }
             }
             if (error != null) {
                 throw error;

@@ -3,7 +3,6 @@ package com.intropro.prairie.unit.oozie;
 import com.intropro.prairie.comparator.ByLineComparator;
 import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.comparator.EntryComparator;
-import com.intropro.prairie.format.seq.SequenceFormat;
 import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
 import com.intropro.prairie.junit.PrairieRunner;
@@ -24,13 +23,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +55,6 @@ public class OozieUnitTest {
     private CmdUnit cmdUnit;
 
     private EntryComparator<String> byLineComparator = new ByLineComparator<>();
-    private EntryComparator<Map<String, String>> mapComparator = new ByLineComparator<>();
 
     private String workflowPath;
 
@@ -71,13 +69,14 @@ public class OozieUnitTest {
         workflowPath = properties.getProperty("appPath");
 
         deployWorkflow(properties);
+        prepareJavaAction(properties);
         prepareMapredAction(properties);
         prepareHiveAction(properties);
         preparePigAction(properties);
         prepareShellAction(properties);
 
         OozieJob oozieJob = oozieUnit.run(properties);
-        oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(10));
+        oozieJob.waitFinish(TimeUnit.MINUTES.toMillis(15));
         Assert.assertEquals(WorkflowJob.Status.SUCCEEDED, oozieJob.getWorkflowJob().getStatus());
 
         checkJavaAction(properties);
@@ -93,6 +92,12 @@ public class OozieUnitTest {
                 hdfsUnit.getFileSystem().create(new Path(workflowPath, "workflow.xml"));
         IOUtils.copy(OozieUnitTest.class.getClassLoader().getResourceAsStream("workflow.xml"), dataOutputStream);
         dataOutputStream.close();
+    }
+
+    private void prepareJavaAction(Properties properties) throws IOException {
+        File file = File.createTempFile("prairie-oozie-test", ".out");
+        file.deleteOnExit();
+        properties.setProperty("outFile", file.getAbsolutePath());
     }
 
     private void prepareMapredAction(Properties properties) throws IOException {
@@ -116,17 +121,11 @@ public class OozieUnitTest {
 
         Path hiveDataDir = new Path("/data/hive");
         hdfsUnit.getFileSystem().mkdirs(hiveDataDir);
-        Path outDir = new Path(hiveDataDir, "table1_2");
-        hdfsUnit.getFileSystem().mkdirs(outDir);
-        hdfsUnit.getFileSystem().setOwner(outDir, "oozie", "oozie");
 
         Path testTable1Loc = new Path(hiveDataDir, "table1");
-        Path testTable2Loc = new Path(hiveDataDir, "table2");
 
         hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/test_table1.csv"),
-                new Path(testTable1Loc, "part-00000").toString(), new TextFormat(), new SequenceFormat());
-        hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/test_table2.csv"),
-                new Path(testTable2Loc, "part-00000").toString(), new TextFormat(), new SequenceFormat());
+                new Path(testTable1Loc, "part-00000").toString(), new TextFormat(), new TextFormat());
 
         HiveConf hiveConf = hiveUnit.getConfig();
         hiveConf.unset("mapreduce.jobtracker.address");
@@ -139,8 +138,6 @@ public class OozieUnitTest {
         properties.setProperty("HIVE_DEFAULTS", hiveDefaultPath.toString());
         properties.setProperty("HIVE_JDBC_URL", hiveUnit.getJdbcUrl());
         properties.setProperty("TEST_TABLE1_LOC", testTable1Loc.toString());
-        properties.setProperty("TEST_TABLE2_LOC", testTable2Loc.toString());
-        properties.setProperty("TEST_TABLE1_2_LOC", outDir.toString());
     }
 
     private void preparePigAction(Properties properties) throws IOException {
@@ -183,9 +180,9 @@ public class OozieUnitTest {
     }
 
     private void checkHive2Action(Properties properties) throws SQLException, IOException {
-        hiveUnit.compare("select * from test_table1_2",
+        hiveUnit.createClient().compare("select * from test_table1",
                 OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/output.csv"),
-                new SvFormat(',')).assertEquals();
+                new SvFormat('|')).assertEquals();
     }
 
     private void checkPigAction(Properties properties) throws IOException {

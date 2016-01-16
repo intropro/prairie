@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -127,12 +126,5 @@ public abstract class BaseUnit implements Unit {
     protected abstract void destroy() throws DestroyUnitException;
 
     protected abstract void init() throws InitUnitException;
-
-    protected String replacePlaceholders(String script, Map<String, String> configurations) {
-        for (Map.Entry<String, String> configuration : configurations.entrySet()) {
-            script = script.replaceAll("\\$\\{" + configuration.getKey() + "\\}", configuration.getValue());
-        }
-        return script;
-    }
 
 }

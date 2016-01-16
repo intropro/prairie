@@ -13,11 +13,6 @@
  */
 package com.intropro.prairie.unit.hive2;
 
-import com.intropro.prairie.comparator.ByLineComparator;
-import com.intropro.prairie.comparator.CompareResponse;
-import com.intropro.prairie.format.Format;
-import com.intropro.prairie.format.InputFormatReader;
-import com.intropro.prairie.format.exception.FormatException;
 import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
@@ -33,10 +28,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.*;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by presidentio on 07.09.15.
@@ -47,15 +42,11 @@ public class Hive2Unit extends HadoopUnit {
 
     public static final Version VERSION = getVersion();
 
-    private static final String DRIVER_NAME = "org.apache.hive.jdbc.HiveDriver";
-    private static final long WAIT_START_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
-
-    public static final String USER = System.getProperty("user.name");
+    public static final String HIVE_HOME = "/user/hive";
     public static final String HIVE_HOST = "localhost";
 
-    public static final String HIVE_HOME = "/user/hive";
-
     private HiveServer2 hiveServer;
+    private List<Hive2UnitClient> clients = new ArrayList<>();
 
     @PrairieUnit
     private YarnUnit yarnUnit;
@@ -63,12 +54,8 @@ public class Hive2Unit extends HadoopUnit {
     @PrairieUnit
     private HdfsUnit hdfsUnit;
 
-    private ByLineComparator byLineComparator = new ByLineComparator();
-
-    private Connection connection;
-    private Statement statement;
-    private String jdbcUrl;
     private int port;
+    private String jdbcUrl;
     private String metastoreJdbcUrl;
 
     public Hive2Unit() {
@@ -86,7 +73,7 @@ public class Hive2Unit extends HadoopUnit {
         hiveServer = new HiveServer2();
         hiveServer.init(gatherConfigs());
         hiveServer.start();
-        initConnection();
+        jdbcUrl = String.format("jdbc:hive2://%s:%s/default", HIVE_HOST, port);
     }
 
     @Override
@@ -103,58 +90,24 @@ public class Hive2Unit extends HadoopUnit {
         return hiveConf;
     }
 
-    public void initConnection() throws InitUnitException {
-        try {
-            Class.forName(DRIVER_NAME);
-        } catch (ClassNotFoundException e) {
-            throw new InitUnitException("Could not load hive jdbc driver", e);
-        }
-        long startTime = System.currentTimeMillis();
-        SQLException mostRecentException = null;
-        while (connection == null && System.currentTimeMillis() - startTime < WAIT_START_TIMEOUT) {
-            try {
-                int hivePort = getConfig().getIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT);
-                jdbcUrl = String.format("jdbc:hive2://%s:%s/default", HIVE_HOST, hivePort);
-                LOGGER.info("Connecting to " + jdbcUrl);
-                connection = DriverManager.getConnection(jdbcUrl, USER, "");
-                break;
-            } catch (SQLException e) {
-                mostRecentException = e;
+    @Override
+    public void destroy() throws DestroyUnitException {
+        for (Hive2UnitClient client : clients) {
+            if (client.isOpen()) {
                 try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                    throw new InitUnitException(e1);
+                    client.close();
+                } catch (IOException e) {
+                    throw new DestroyUnitException("Failed to close hive client", e);
                 }
             }
         }
-        if (connection == null) {
-            throw new InitUnitException("Failed to create hive connection", mostRecentException);
-        }
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            throw new InitUnitException("Failed to create hive statement", e);
-        }
-        try {
-            createDefaultDatabase();
-        } catch (SQLException e) {
-            LOGGER.warn("Failed to create default database: default", e);
-        }
-    }
-
-    private void createDefaultDatabase() throws SQLException {
-        statement.execute("CREATE DATABASE IF NOT EXISTS default");
-    }
-
-    @Override
-    public void destroy() throws DestroyUnitException {
-        try {
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            throw new DestroyUnitException("Failed to close hive connection", e);
-        }
         hiveServer.stop();
+    }
+
+    public Hive2UnitClient createClient() throws IOException {
+        Hive2UnitClient hive2UnitClient = new Hive2UnitClient(HIVE_HOST, port, hdfsUnit.getFileSystem());
+        clients.add(hive2UnitClient);
+        return hive2UnitClient;
     }
 
     public String getJdbcUrl() {
@@ -164,70 +117,6 @@ public class Hive2Unit extends HadoopUnit {
     public HiveConf getConfig() {
         HiveConf hiveConf = new HiveConf(hiveServer.getHiveConf());
         return hiveConf;
-    }
-
-    public List<Map<String, String>> executeQuery(String script, Map<String, String> parameters) throws SQLException {
-        script = replacePlaceholders(script, parameters);
-        return executeQuery(script);
-    }
-
-    public List<Map<String, String>> executeQuery(String script) throws SQLException {
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-        List<String> splittedScript = StatementsSplitter.splitStatements(script);
-        for (String scriptStatement : splittedScript.subList(0, splittedScript.size() - 1)) {
-            LOGGER.info("Executing: " + scriptStatement);
-            statement.execute(scriptStatement);
-        }
-        String query = splittedScript.get(splittedScript.size() - 1);
-        LOGGER.info("Executing: " + query);
-        ResultSet resultSet = statement.executeQuery(query);
-        while (resultSet.next()) {
-            Map<String, String> row = new LinkedHashMap<String, String>();
-            for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                row.put(resultSet.getMetaData().getColumnName(i), resultSet.getString(i));
-            }
-            result.add(row);
-        }
-        return result;
-    }
-
-    public void execute(String script, Map<String, String> parameters) throws SQLException {
-        script = replacePlaceholders(script, parameters);
-        execute(script);
-    }
-
-
-    public void execute(String script) throws SQLException {
-        for (String scriptStatement : StatementsSplitter.splitStatements(script)) {
-            LOGGER.info("Executing: " + scriptStatement);
-            statement.execute(scriptStatement);
-        }
-    }
-
-    public CompareResponse<Map<String, String>> compare(String query, InputStream expectedStream,
-                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
-        List<Map<String, String>> queryResult = executeQuery(query);
-        try {
-            InputFormatReader<Map<String, Object>> expectedReader = expectedFormat.createReader(expectedStream);
-            CompareResponse<Map<String, String>> compareResponse = byLineComparator.compare(expectedReader.all(), queryResult);
-            expectedReader.close();
-            expectedReader.close();
-            return compareResponse;
-        } catch (FormatException e) {
-            throw new IOException(e);
-        }
-    }
-
-    public CompareResponse<Map<String, String>> compare(String query, Path expectedPath,
-                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
-        InputStream retrieved = hdfsUnit.getFileSystem().open(expectedPath);
-        return compare(query, retrieved, expectedFormat);
-    }
-
-    public CompareResponse<Map<String, String>> compare(String query, String expectedResource,
-                                                        Format<Map<String, Object>> expectedFormat) throws IOException, SQLException {
-        InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
-        return compare(query, expectedStream, expectedFormat);
     }
 
     private static Version getVersion() {

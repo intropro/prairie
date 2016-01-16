@@ -18,6 +18,7 @@ import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
+import com.intropro.prairie.utils.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.pig.PigException;
 import org.apache.pig.PigServer;
@@ -69,7 +70,7 @@ public class PigUnit extends HadoopUnit {
     }
 
     public void run(String script, Map<String, String> placeholders) throws PigException {
-        run(replacePlaceholders(script, placeholders));
+        run(StringUtils.replacePlaceholders(script, placeholders));
     }
 
     public void run(String script) throws PigException {

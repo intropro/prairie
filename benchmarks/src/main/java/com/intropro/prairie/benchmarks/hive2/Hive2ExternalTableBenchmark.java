@@ -62,7 +62,7 @@ public class Hive2ExternalTableBenchmark {
     @Benchmark
     public void measureExternalTable() throws Exception {
         String query = IOUtils.toString(Hive2ExternalTableBenchmark.class.getClassLoader().getResourceAsStream("hive/external/external_table.hql"));
-        hive2Unit.execute(query, placeholders);
+        hive2Unit.createClient().execute(query, placeholders);
     }
 
     @TearDown(Level.Invocation)

@@ -34,7 +34,7 @@ public class PortProvider {
     public static synchronized int nextPort() {
         while (!isAvailable(++CURRENT)) {
             if (CURRENT == PORT_END) {
-                throw new RuntimeException("All ports in user");
+                throw new RuntimeException("All ports in use");
             }
         }
         return CURRENT;

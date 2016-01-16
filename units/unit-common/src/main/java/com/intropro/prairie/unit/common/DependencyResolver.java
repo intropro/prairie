@@ -150,7 +150,7 @@ public class DependencyResolver {
             List<Object> dependentObjects = dependencies.get(dependency.getClass());
             if (dependentObjects == null) {
                 dependentObjects = new ArrayList<>();
-                dependencies.get(dependency.getClass()).add(dependentObjects);
+                dependencies.put(dependency.getClass(), dependentObjects);
             }
             dependentObjects.add(target);
         } catch (IllegalAccessException e) {
