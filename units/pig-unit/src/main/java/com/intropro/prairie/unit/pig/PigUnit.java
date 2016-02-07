@@ -2,9 +2,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
+import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import com.intropro.prairie.utils.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -25,12 +26,16 @@ import org.apache.pig.PigServer;
 import org.apache.pig.impl.PigContext;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Created by presidentio on 10/21/15.
  */
 public class PigUnit extends HadoopUnit {
+
+    @PrairieUnit
+    private HdfsUnit hdfsUnit;
 
     @PrairieUnit
     private YarnUnit yarnUnit;
@@ -44,7 +49,11 @@ public class PigUnit extends HadoopUnit {
     @Override
     public Configuration gatherConfigs() {
         Configuration configuration = new Configuration(super.gatherConfigs());
-        configuration.addResource(yarnUnit.getConfig());
+        Iterator<Map.Entry<String, String>> iterator = yarnUnit.getConfig().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> next = iterator.next();
+            configuration.set(next.getKey(), next.getValue());
+        }
         configuration.addResource("pig-site.prairie.xml");
         return configuration;
     }

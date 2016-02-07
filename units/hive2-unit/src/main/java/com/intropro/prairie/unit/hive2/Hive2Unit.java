@@ -28,10 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by presidentio on 07.09.15.
@@ -80,7 +77,11 @@ public class Hive2Unit extends HadoopUnit {
     protected HiveConf gatherConfigs() {
         port = PortProvider.nextPort();
         HiveConf hiveConf = new HiveConf(super.gatherConfigs(), Hive2Unit.class);
-        hiveConf.addResource(yarnUnit.getConfig());
+        Iterator<Map.Entry<String, String>> iterator = yarnUnit.getConfig().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> next = iterator.next();
+            hiveConf.set(next.getKey(), next.getValue());
+        }
         hiveConf.addResource("hive-site.prairie.xml");
         hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().toString());
         hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);

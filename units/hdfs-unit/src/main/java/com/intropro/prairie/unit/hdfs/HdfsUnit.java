@@ -66,6 +66,8 @@ public class HdfsUnit extends HadoopUnit {
         Configuration conf = super.gatherConfigs();
         conf.addResource("hdfs-site.prairie.xml");
         conf.set("hdfs.minidfs.basedir", getTmpDir().toString());
+        conf.set("hadoop.proxyuser." + user + ".hosts", "*");
+        conf.set("hadoop.proxyuser." + user + ".groups", "*");
         return conf;
     }
 
@@ -85,7 +87,7 @@ public class HdfsUnit extends HadoopUnit {
     }
 
     public String getNamenode() {
-        return miniDFSCluster.getNameNode().getClientNamenodeAddress();
+        return "hdfs://" + miniDFSCluster.getNameNode().getHostAndPort();
     }
 
     public FileSystem getFileSystem() throws IOException {

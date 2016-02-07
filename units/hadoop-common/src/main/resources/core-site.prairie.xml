@@ -1,2 +1,6 @@
 <configuration>
+    <property>
+        <name>hadoop.security.token.service.use_ip</name>
+        <value>true</value>
+    </property>
 </configuration>

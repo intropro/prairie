@@ -17,7 +17,6 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.oozie.client.WorkflowJob;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,8 +63,8 @@ public class OozieUnitTest {
     public void testOozie() throws Exception {
         Properties properties = new Properties();
         properties.load(OozieUnitTest.class.getClassLoader().getResourceAsStream("job.properties"));
-        properties.setProperty("nameNode", hdfsUnit.getFileSystem().getUri().toString());
-        properties.setProperty("jobTracker", yarnUnit.getConfig().get(YarnConfiguration.RM_ADDRESS));
+        properties.setProperty("nameNode", hdfsUnit.getNamenode());
+        properties.setProperty("jobTracker", yarnUnit.getJobTracker());
         workflowPath = properties.getProperty("appPath");
 
         deployWorkflow(properties);
@@ -147,8 +146,8 @@ public class OozieUnitTest {
                 new Path(workflowPath, "pig-action.pig").toString(), new TextFormat(), new TextFormat());
         hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("pig-action/input.csv"),
                 properties.getProperty("pigInput"), new TextFormat(), new TextFormat());
-        properties.setProperty("INPUT_PATH", "hdfs://" + hdfsUnit.getNamenode() + properties.getProperty("pigInput"));
-        properties.setProperty("OUTPUT_PATH", "hdfs://" + hdfsUnit.getNamenode() + properties.getProperty("pigOutput"));
+        properties.setProperty("INPUT_PATH", hdfsUnit.getNamenode() + properties.getProperty("pigInput"));
+        properties.setProperty("OUTPUT_PATH", hdfsUnit.getNamenode() + properties.getProperty("pigOutput"));
     }
 
     private void prepareShellAction(Properties properties) throws IOException {

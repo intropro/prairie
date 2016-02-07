@@ -34,6 +34,8 @@ public class Hive2UnitTest {
     @Test
     public void testForDemo() throws Exception {
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.13.1")) > 0);
+        //Due to HIVE-9957
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) != 0);
         Hive2UnitClient client = hive2Unit.createClient();
         client.execute("create database testForDemo; use testForDemo;");
         client.execute("use testForDemo; create table prairie_test_table (id bigint, name string)");

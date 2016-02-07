@@ -15,11 +15,15 @@ package com.intropro.prairie.unit.hadoop;
 
 import com.intropro.prairie.unit.common.BaseUnit;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by presidentio on 9/18/15.
  */
 public abstract class HadoopUnit extends BaseUnit {
+
+    private static final Logger LOGGER = LogManager.getLogger(HadoopUnit.class);
 
     public HadoopUnit(String unitName) {
         super(unitName);

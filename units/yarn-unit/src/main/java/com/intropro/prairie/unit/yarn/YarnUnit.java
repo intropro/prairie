@@ -22,7 +22,6 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.v2.MiniMRYarnCluster;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
-import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceScheduler;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +36,7 @@ public class YarnUnit extends HadoopUnit {
 
     private static final String NAME = "prairie-yarn";
 
-    private MiniYARNCluster miniMR;
+    private MiniMRYarnCluster miniMR;
 
     @PrairieUnit
     private HdfsUnit hdfsUnit;
@@ -59,7 +58,8 @@ public class YarnUnit extends HadoopUnit {
     @Override
     protected YarnConfiguration gatherConfigs() {
         YarnConfiguration yarnConfigs = new YarnConfiguration(super.gatherConfigs());
-        yarnConfigs.addResource(hdfsUnit.getConfig());
+//        yarnConfigs.set("fs.default.name", hdfsUnit.getNamenode());
+        yarnConfigs.set("fs.defaultFS", hdfsUnit.getNamenode());
         yarnConfigs.set("mapreduce.task.tmp.dir", getTmpDir().toString());
         String user = System.getProperty("user.name");
         yarnConfigs.set("hadoop.proxyuser." + user + ".hosts", "*");
@@ -83,5 +83,9 @@ public class YarnUnit extends HadoopUnit {
         Configuration configuration = new Configuration(miniMR.getConfig());
         configuration.set("mapreduce.framework.name", gatherConfigs().get("mapreduce.framework.name"));
         return configuration;
+    }
+
+    public String getJobTracker() {
+        return getConfig().get("yarn.resourcemanager.address");
     }
 }
