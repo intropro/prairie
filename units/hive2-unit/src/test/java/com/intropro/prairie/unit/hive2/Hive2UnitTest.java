@@ -68,6 +68,8 @@ public class Hive2UnitTest {
     @Test
     public void testInsertSelect() throws Exception {
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.13.1")) > 0);
+        //HIVE-9957
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) > 0 || HdfsUnit.VERSION.compareTo(new Version("2.5.2")) > 0);
         Hive2UnitClient client = hive2Unit.createClient();
         client.execute("create database testInsertSelect; use testInsertSelect;");
         String createTableScript = "create table test_table (id bigint, field2 string)";
@@ -84,6 +86,8 @@ public class Hive2UnitTest {
 
     @Test
     public void testExternalTable() throws Exception {
+        //HIVE-9957
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) > 0 || HdfsUnit.VERSION.compareTo(new Version("2.5.2")) > 0);
         Hive2UnitClient client = hive2Unit.createClient();
         client.execute("create database testExternalTable; use testExternalTable;");
         String table1Location = "/data/test_table1";
@@ -133,6 +137,8 @@ public class Hive2UnitTest {
 
     @Test
     public void testCommentSuccess() throws Exception {
+        //HIVE-9957
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) > 0 || HdfsUnit.VERSION.compareTo(new Version("2.5.2")) > 0);
         Hive2UnitClient client = hive2Unit.createClient();
         client.execute("create database testCommentSuccess; use testCommentSuccess;");
         client.execute(IOUtils.toString(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/comment/comment-success.hql")));

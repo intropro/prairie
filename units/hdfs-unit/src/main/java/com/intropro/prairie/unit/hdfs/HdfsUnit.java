@@ -19,6 +19,7 @@ import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
 import com.intropro.prairie.format.exception.FormatException;
+import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -29,16 +30,23 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.Properties;
 
 /**
  * Created by presidentio on 03.09.15.
  */
 @PrairieUnit
 public class HdfsUnit extends HadoopUnit {
+
+    private static final Logger LOGGER = LogManager.getLogger(HdfsUnit.class);
+
+    public static final Version VERSION = getVersion();
 
     private MiniDFSCluster miniDFSCluster;
 
@@ -156,6 +164,16 @@ public class HdfsUnit extends HadoopUnit {
                                           String expectedResource, Format<T> expectedFormat) throws IOException {
         InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
         return compare(path, format, expectedStream, expectedFormat);
+    }
+
+    private static Version getVersion() {
+        Properties properties = new Properties();
+        try {
+            properties.load(HdfsUnit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.apache.hadoop/hadoop-hdfs/pom.properties"));
+        } catch (IOException e) {
+            LOGGER.error("Can't load hdfs version", e);
+        }
+        return new Version(properties.getProperty("version", "unknown"));
     }
 
 }
