@@ -7,6 +7,7 @@ import com.intropro.prairie.format.sv.SvFormat;
 import com.intropro.prairie.format.text.TextFormat;
 import com.intropro.prairie.junit.PrairieRunner;
 import com.intropro.prairie.unit.cmd.CmdUnit;
+import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.hive2.Hive2Unit;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -113,7 +115,12 @@ public class OozieUnitTest {
     private void prepareHiveAction(Properties properties) throws IOException, SQLException {
         FSDataOutputStream scriptOutputStream =
                 hdfsUnit.getFileSystem().create(new Path(workflowPath, "hive2-action/hive-action-query.hql"));
-        InputStream scriptInputStream = OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/hive-action-query.hql");
+        InputStream scriptInputStream;
+        if (Hive2Unit.VERSION.compareTo(new Version("1.1.1")) <= 0 && HdfsUnit.VERSION.compareTo(new Version("2.5.2")) <= 0) {
+            scriptInputStream = OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/hive-action-query-hive-1.1.1.hql");
+        } else {
+            scriptInputStream = OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/hive-action-query.hql");
+        }
         IOUtils.copy(scriptInputStream, scriptOutputStream);
         scriptInputStream.close();
         scriptOutputStream.close();
@@ -122,7 +129,6 @@ public class OozieUnitTest {
         hdfsUnit.getFileSystem().mkdirs(hiveDataDir);
 
         Path testTable1Loc = new Path(hiveDataDir, "table1");
-
         hdfsUnit.saveAs(OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/test_table1.csv"),
                 new Path(testTable1Loc, "part-00000").toString(), new TextFormat(), new TextFormat());
 
@@ -179,9 +185,15 @@ public class OozieUnitTest {
     }
 
     private void checkHive2Action(Properties properties) throws SQLException, IOException {
-        hiveUnit.createClient().compare("select * from test_table1",
-                OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/output.csv"),
-                new SvFormat('|')).assertEquals();
+        if (Hive2Unit.VERSION.compareTo(new Version("1.1.1")) <= 0 && HdfsUnit.VERSION.compareTo(new Version("2.5.2")) <= 0) {
+            List<Map<String, String>> tables = hiveUnit.createClient().executeQuery("show tables;");
+            Assert.assertEquals(1, tables.size());
+            Assert.assertEquals("test_table1", tables.get(0).get("tab_name"));
+        } else {
+            hiveUnit.createClient().compare("select * from test_table1",
+                    OozieUnitTest.class.getClassLoader().getResourceAsStream("hive2-action/output.csv"),
+                    new SvFormat('|')).assertEquals();
+        }
     }
 
     private void checkPigAction(Properties properties) throws IOException {

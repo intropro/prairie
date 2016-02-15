@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS test_table1;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS test_table1(
+    f1 STRING,
+    f2 STRING,
+    f3 STRING
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+LINES TERMINATED BY '\n'
+TBLPROPERTIES ('serialization.null.format' = 'NULL');
+
+SELECT * FROM test_table1;
