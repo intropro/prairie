@@ -91,11 +91,12 @@ public class HdfsUnit extends HadoopUnit {
         } catch (IOException e) {
             throw new DestroyUnitException(e);
         }
-        miniDFSCluster.shutdown(true);
+        miniDFSCluster.shutdown();
     }
 
     public String getNamenode() {
-        return "hdfs://" + miniDFSCluster.getNameNode().getHostAndPort();
+        return "hdfs://" + miniDFSCluster.getNameNode().getNameNodeAddress().getHostName() + ":"
+                + miniDFSCluster.getNameNode().getNameNodeAddress().getPort();
     }
 
     public FileSystem getFileSystem() throws IOException {
