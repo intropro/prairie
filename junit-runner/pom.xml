@@ -11,18 +11,8 @@
 
     <artifactId>junit-runner</artifactId>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit-junit.version}</version>
-                <scope>compile</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>unit-common</artifactId>
@@ -30,6 +20,12 @@
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>test-utils</artifactId>
+        </dependency>
+
+        <!--lib dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 

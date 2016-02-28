@@ -12,19 +12,22 @@
     <artifactId>kafka-unit</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>unit-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
-            <artifactId>junit-runner</artifactId>
+            <artifactId>zookeeper-unit</artifactId>
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
-            <artifactId>zookeeper-unit</artifactId>
+            <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <!--lib dependencies-->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.10</artifactId>
@@ -32,6 +35,13 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <!--test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

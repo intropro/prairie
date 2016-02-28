@@ -12,6 +12,7 @@
     <artifactId>unit-common</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>comparator</artifactId>
@@ -28,7 +29,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-1.2-api</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

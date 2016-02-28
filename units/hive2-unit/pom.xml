@@ -12,6 +12,7 @@
     <artifactId>hive2-unit</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -23,8 +24,10 @@
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <!--lib dependencies-->
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-service</artifactId>
@@ -42,6 +45,12 @@
             <artifactId>commons-csv</artifactId>
         </dependency>
 
+        <!--test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

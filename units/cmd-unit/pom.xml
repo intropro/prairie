@@ -12,6 +12,7 @@
     <artifactId>cmd-unit</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>unit-common</artifactId>
@@ -19,8 +20,10 @@
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <!--lib dependencies-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -32,6 +35,13 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!--test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

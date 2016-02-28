@@ -12,11 +12,13 @@
     <artifactId>hadoop-common</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>unit-common</artifactId>
         </dependency>
 
+        <!--lib dependencies-->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>

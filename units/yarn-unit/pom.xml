@@ -12,6 +12,7 @@
     <artifactId>yarn-unit</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -27,8 +28,15 @@
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <!--test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>

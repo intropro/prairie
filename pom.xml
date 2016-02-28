@@ -54,11 +54,20 @@
     </modules>
 
     <properties>
+        <!--system properties-->
         <java.version>1.7</java.version>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <memory.xmx>1024</memory.xmx>
         <memory.xms>256</memory.xms>
 
+        <!--plugin versions-->
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.5</maven-surefire-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-source-plugin.verion>2.4</maven-source-plugin.verion>
+        <maven-javadoc-plugin.version>2.10.1</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
+
+        <!--lib dependencies versions-->
         <hadoop.version>2.7.1</hadoop.version>
         <oozie.version>4.2.0</oozie.version>
         <hive.version>1.2.1</hive.version>
@@ -66,24 +75,25 @@
         <zookeeper.version>3.4.6</zookeeper.version>
         <kafka.version>0.8.2.2</kafka.version>
         <pig.version>0.15.0</pig.version>
-        <org.hsqldb-hsqldb.version>2.3.3</org.hsqldb-hsqldb.version>
-        <org.apache.commons-commons-csv.version>1.2</org.apache.commons-commons-csv.version>
-        <commons-codec-commons-codec.version>1.10</commons-codec-commons-codec.version>
-        <org.apache.avro-avro.version>1.7.4</org.apache.avro-avro.version>
-        <commons-io-commons-io.version>2.4</commons-io-commons-io.version>
-        <org.apache.logging.log4j-log4j-core.version>2.4</org.apache.logging.log4j-log4j-core.version>
-        <org.codehaus.jackson-jackson-core-asl.version>1.9.1</org.codehaus.jackson-jackson-core-asl.version>
-        <org.codehaus.jackson-jackson-mapper-asl.version>1.9.1</org.codehaus.jackson-jackson-mapper-asl.version>
-        <com.beust-jcommander.version>1.48</com.beust-jcommander.version>
+        <hsqldb.version>2.3.3</hsqldb.version>
+        <commons-csv.version>1.2</commons-csv.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <avro.version>1.7.4</avro.version>
+        <commons-io.version>2.4</commons-io.version>
+        <log4j.version>2.5</log4j.version>
+        <jackson-asl.version>1.9.1</jackson-asl.version>
+        <jcommander.version>1.48</jcommander.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <log4j-1.2-api.version>2.5</log4j-1.2-api.version>
+        <log4j.version>2.5</log4j.version>
 
-        <junit-junit.version>4.12</junit-junit.version>
-        <org.openjdk.jmh.version>1.11.1</org.openjdk.jmh.version>
+        <!--test dependencies versions-->
+        <junit.version>4.12</junit.version>
+        <jmh.version>1.11.1</jmh.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!--inner dependencies-->
             <dependency>
                 <groupId>com.intropro.prairie</groupId>
                 <artifactId>test-utils</artifactId>
@@ -128,7 +138,6 @@
                 <groupId>com.intropro.prairie</groupId>
                 <artifactId>junit-runner</artifactId>
                 <version>${project.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.intropro.prairie</groupId>
@@ -161,6 +170,7 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!--lib dependencies-->
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-common</artifactId>
@@ -184,12 +194,12 @@
             <dependency>
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
-                <version>${org.hsqldb-hsqldb.version}</version>
+                <version>${hsqldb.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-csv</artifactId>
-                <version>${org.apache.commons-commons-csv.version}</version>
+                <version>${commons-csv.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.oozie</groupId>
@@ -220,12 +230,12 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>${commons-codec-commons-codec.version}</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro</artifactId>
-                <version>${org.apache.avro-avro.version}</version>
+                <version>${avro.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.flume</groupId>
@@ -245,12 +255,12 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io-commons-io.version}</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>${org.apache.logging.log4j-log4j-core.version}</version>
+                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.zookeeper</groupId>
@@ -271,12 +281,12 @@
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
-                <version>${org.codehaus.jackson-jackson-core-asl.version}</version>
+                <version>${jackson-asl.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
-                <version>${org.codehaus.jackson-jackson-mapper-asl.version}</version>
+                <version>${jackson-asl.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
@@ -286,17 +296,17 @@
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
-                <version>${org.openjdk.jmh.version}</version>
+                <version>${jmh.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-generator-annprocess</artifactId>
-                <version>${org.openjdk.jmh.version}</version>
+                <version>${jmh.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.beust</groupId>
                 <artifactId>jcommander</artifactId>
-                <version>${com.beust-jcommander.version}</version>
+                <version>${jcommander.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -306,24 +316,17 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
-                <version>${log4j-1.2-api.version}</version>
+                <version>${log4j.version}</version>
             </dependency>
 
+            <!--test dependencies-->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit-junit.version}</version>
-                <scope>test</scope>
+                <version>${junit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>
@@ -340,7 +343,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <forkMode>once</forkMode>
                         <argLine>-Xms${memory.xms}m -Xmx${memory.xmx}m</argLine>
@@ -358,7 +361,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -372,7 +375,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.4</version>
+                        <version>${maven-source-plugin.verion}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -385,7 +388,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.1</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>

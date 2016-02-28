@@ -12,6 +12,7 @@
     <artifactId>test-utils</artifactId>
 
     <dependencies>
+        <!--lib dependencies-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

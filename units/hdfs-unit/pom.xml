@@ -12,17 +12,26 @@
     <artifactId>hdfs-unit</artifactId>
 
     <dependencies>
+        <!--inner dependencies-->
         <dependency>
             <groupId>com.intropro.prairie</groupId>
             <artifactId>hadoop-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
-            <artifactId>junit-runner</artifactId>
+            <artifactId>format</artifactId>
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
-            <artifactId>format</artifactId>
+            <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
