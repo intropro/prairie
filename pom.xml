@@ -445,8 +445,18 @@
             <id>cloudera</id>
             <repositories>
                 <repository>
-                    <id>cloudera</id>
+                    <id>cdh</id>
                     <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+                </repository>
+            </repositories>
+        </profile>
+
+        <profile>
+            <id>hortonworks</id>
+            <repositories>
+                <repository>
+                    <id>hdp</id>
+                    <url>http://repo.hortonworks.com/content/repositories/releases/</url>
                 </repository>
             </repositories>
         </profile>
