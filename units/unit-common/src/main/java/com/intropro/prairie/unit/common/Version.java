@@ -21,8 +21,8 @@ public class Version implements Comparable {
             throw new IllegalArgumentException("Expected: " + getClass().getName());
         }
         String version2 = ((Version) o).getVersion();
-        String[] vals1 = version.split("\\.");
-        String[] vals2 = version2.split("\\.");
+        String[] vals1 = version.split("\\.|-");
+        String[] vals2 = version2.split("\\.|-");
         int i = 0;
         // set index to first non-equal ordinal or length of shortest version string
         while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
@@ -30,7 +30,11 @@ public class Version implements Comparable {
         }
         // compare first non-equal ordinal number
         if (i < vals1.length && i < vals2.length) {
-            int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+            int fromPos = 0;
+            while (vals1[i].charAt(fromPos) == vals2[i].charAt(fromPos)) {
+                fromPos++;
+            }
+            int diff = Integer.valueOf(vals1[i].substring(fromPos)).compareTo(Integer.valueOf(vals2[i].substring(fromPos)));
             return Integer.signum(diff);
         }
         // the strings are equal or one string is a substring of the other
