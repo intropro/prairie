@@ -58,4 +58,12 @@ public class ConstSource extends AbstractSource implements Configurable, Pollabl
         return status;
 
     }
+
+    public long getBackOffSleepIncrement() {
+        return 0;
+    }
+
+    public long getMaxBackOffSleepInterval() {
+        return 0;
+    }
 }
