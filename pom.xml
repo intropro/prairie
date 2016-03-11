@@ -458,6 +458,10 @@
                     <id>hdp</id>
                     <url>http://repo.hortonworks.com/content/repositories/releases/</url>
                 </repository>
+                <repository>
+                    <id>hdp1</id>
+                    <url>http://repo.hortonworks.com/content/groups/public/</url>
+                </repository>
             </repositories>
         </profile>
     </profiles>

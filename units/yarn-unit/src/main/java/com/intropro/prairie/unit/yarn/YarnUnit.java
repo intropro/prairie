@@ -58,7 +58,6 @@ public class YarnUnit extends HadoopUnit {
     @Override
     protected YarnConfiguration gatherConfigs() {
         YarnConfiguration yarnConfigs = new YarnConfiguration(super.gatherConfigs());
-//        yarnConfigs.set("fs.default.name", hdfsUnit.getNamenode());
         yarnConfigs.set("fs.defaultFS", hdfsUnit.getNamenode());
         yarnConfigs.set("mapreduce.task.tmp.dir", getTmpDir().toString());
         String user = System.getProperty("user.name");

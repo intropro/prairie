@@ -13,9 +13,13 @@
  */
 package com.intropro.prairie.unit.flume;
 
+import com.google.common.collect.Maps;
 import org.apache.flume.conf.FlumeConfiguration;
 import org.apache.flume.node.AbstractConfigurationProvider;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -33,5 +37,19 @@ public class PropertiesFlumeConfigurationProvider extends AbstractConfigurationP
     @Override
     protected FlumeConfiguration getFlumeConfiguration() {
         return new FlumeConfiguration(toMap(properties));
+    }
+
+
+    protected Map<String, String> toMap(Properties properties) {
+        HashMap result = Maps.newHashMap();
+        Enumeration propertyNames = properties.propertyNames();
+
+        while(propertyNames.hasMoreElements()) {
+            String name = (String)propertyNames.nextElement();
+            String value = properties.getProperty(name);
+            result.put(name, value);
+        }
+
+        return result;
     }
 }
