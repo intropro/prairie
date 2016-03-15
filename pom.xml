@@ -85,6 +85,7 @@
         <jcommander.version>1.48</jcommander.version>
         <commons-lang.version>2.6</commons-lang.version>
         <log4j.version>2.5</log4j.version>
+        <joda-time.version>2.5</joda-time.version>
 
         <!--test dependencies versions-->
         <junit.version>4.12</junit.version>
@@ -317,6 +318,11 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
             </dependency>
 
             <!--test dependencies-->

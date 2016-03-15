@@ -30,8 +30,8 @@ public class PigUnitTest {
                 new TextFormat(), new TextFormat());
         String script = IOUtils.toString(PigUnitTest.class.getClassLoader().getResourceAsStream("pig/test.pig"));
         Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("INPUT_PATH", "/data/input");
-        placeholders.put("OUTPUT_PATH", "/data/output");
+        placeholders.put("INPUT_PATH", hdfsUnit.getNamenode() + "/data/input");
+        placeholders.put("OUTPUT_PATH", hdfsUnit.getNamenode() + "/data/output");
         pigUnit.run(script, placeholders);
         hdfsUnit.compare(new Path("/data/output"), new TextFormat(), "pig/output.csv", new TextFormat()).assertEquals();
     }

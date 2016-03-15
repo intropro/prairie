@@ -21,6 +21,7 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import com.intropro.prairie.utils.StringUtils;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.pig.ExecType;
 import org.apache.pig.PigException;
 import org.apache.pig.PigServer;
 import org.apache.pig.impl.PigContext;
@@ -66,7 +67,14 @@ public class PigUnit extends HadoopUnit {
     @Override
     protected void init() throws InitUnitException {
         try {
-            PigContext pigContext = new PigContext(gatherConfigs());
+            Configuration configuration = gatherConfigs();
+            ExecType execType;
+            if (configuration.get("mapreduce.framework.name").equals("local")) {
+                execType = ExecType.LOCAL;
+            } else {
+                execType = ExecType.MAPREDUCE;
+            }
+            PigContext pigContext = new PigContext(execType, configuration);
             pigServer = new PigServer(pigContext);
         } catch (PigException e) {
             throw new InitUnitException(e);
