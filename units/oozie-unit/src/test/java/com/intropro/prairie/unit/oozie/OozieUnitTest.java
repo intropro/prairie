@@ -20,6 +20,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.oozie.client.WorkflowJob;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -63,6 +64,7 @@ public class OozieUnitTest {
 
     @Test
     public void testOozie() throws Exception {
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.14.0")) >= 0);
         Properties properties = new Properties();
         properties.load(OozieUnitTest.class.getClassLoader().getResourceAsStream("job.properties"));
         properties.setProperty("nameNode", hdfsUnit.getNamenode());

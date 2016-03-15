@@ -1,0 +1,18 @@
+<workflow-app name="test-oozie-workflow" xmlns="uri:oozie:workflow:0.4">
+    <start to="java-action"/>
+    <action name="java-action">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>com.intropro.prairie.unit.oozie.java.OozieTestActionClass</main-class>
+            <arg>${outFile}</arg>
+            <arg>${text}</arg>
+        </java>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+    <kill name="fail">
+        <message>Fail workflow</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

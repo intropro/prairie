@@ -83,7 +83,8 @@ public class Hive2Unit extends HadoopUnit {
             hiveConf.set(next.getKey(), next.getValue());
         }
         hiveConf.addResource("hive-site.prairie.xml");
-        hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().toString());
+        hiveConf.setVar(HiveConf.ConfVars.SCRATCHDIR, getTmpDir().resolve("scratchdir").toString());
+        hiveConf.setVar(HiveConf.ConfVars.METASTOREWAREHOUSE, getTmpDir().resolve("warehouse").toString());
         hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
         hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
         metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();

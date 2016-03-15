@@ -33,7 +33,7 @@ public class Hive2UnitTest {
 
     @Test
     public void testForDemo() throws Exception {
-        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.13.1")) > 0);
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.14.0")) >= 0);
         //Due to HIVE-9957
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) != 0);
         Hive2UnitClient client = hive2Unit.createClient();
@@ -67,7 +67,7 @@ public class Hive2UnitTest {
 
     @Test
     public void testInsertSelect() throws Exception {
-        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.13.1")) > 0);
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.14.0")) >= 0);
         //HIVE-9957
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) > 0 || HdfsUnit.VERSION.compareTo(new Version("2.5.2")) > 0);
         Hive2UnitClient client = hive2Unit.createClient();
@@ -86,6 +86,7 @@ public class Hive2UnitTest {
 
     @Test
     public void testExternalTable() throws Exception {
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.14.0")) >= 0);
         //HIVE-9957
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) > 0 || HdfsUnit.VERSION.compareTo(new Version("2.5.2")) > 0);
         Hive2UnitClient client = hive2Unit.createClient();
@@ -105,6 +106,7 @@ public class Hive2UnitTest {
 
     @Test
     public void testJoin() throws Exception {
+        Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("0.14.0")) >= 0);
         //Skipped for 1.1.1 due to HIVE-11249
         Assume.assumeTrue(Hive2Unit.VERSION.compareTo(new Version("1.1.1")) != 0);
         Hive2UnitClient client = hive2Unit.createClient();
