@@ -86,6 +86,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <log4j.version>2.5</log4j.version>
         <joda-time.version>2.5</joda-time.version>
+        <jline.version>0.9.94</jline.version>
 
         <!--test dependencies versions-->
         <junit.version>4.12</junit.version>
@@ -323,6 +324,11 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>${jline.version}</version>
             </dependency>
 
             <!--test dependencies-->
