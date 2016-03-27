@@ -325,11 +325,6 @@
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
             </dependency>
-            <dependency>
-                <groupId>jline</groupId>
-                <artifactId>jline</artifactId>
-                <version>${jline.version}</version>
-            </dependency>
 
             <!--test dependencies-->
             <dependency>
@@ -475,6 +470,15 @@
                     <url>http://repo.hortonworks.com/content/groups/public/</url>
                 </repository>
             </repositories>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>jline</groupId>
+                        <artifactId>jline</artifactId>
+                        <version>${jline.version}</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
         </profile>
     </profiles>
 
