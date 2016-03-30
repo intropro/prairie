@@ -29,7 +29,7 @@ public class PigStopBenchmark {
     }
 
     @Benchmark
-    public void measureHdfsStart() throws BigDataTestFrameworkException {
+    public void measureStop() throws BigDataTestFrameworkException {
         dependencyResolver.destroy(pigUnitContainer);
     }
 

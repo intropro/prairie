@@ -29,7 +29,7 @@ public class HdfsStartBenchmark {
     }
 
     @Benchmark
-    public void measureHdfsStart() throws BigDataTestFrameworkException {
+    public void measureStart() throws BigDataTestFrameworkException {
         dependencyResolver.resolve(hdfsUnitContainer);
     }
 
