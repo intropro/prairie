@@ -34,9 +34,17 @@ public class DependencyResolver {
     private Map<Class, List<Object>> dependencies = new HashMap<Class, List<Object>>();
 
     public void resolve(Object object) throws BigDataTestFrameworkException {
-        for (Field field : object.getClass().getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
+        resolve(object, object.getClass());
+    }
+
+    private void resolve(Object object, Class clazz) throws BigDataTestFrameworkException {
+        Class parentClass = clazz.getSuperclass();
+        if(parentClass != null && !parentClass.equals(Object.class)) {
+            resolve(object, parentClass);
+        }
+        for (Field field : clazz.getDeclaredFields()) {
+            BigDataUnit prairieUnit = field.getAnnotation(BigDataUnit.class);
+            if (prairieUnit != null && !Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, object);
             }
         }
@@ -44,8 +52,8 @@ public class DependencyResolver {
 
     public void resolveStatic(Class clazz) throws BigDataTestFrameworkException {
         for (Field field : clazz.getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
+            BigDataUnit prairieUnit = field.getAnnotation(BigDataUnit.class);
+            if (prairieUnit != null && Modifier.isStatic(field.getModifiers())) {
                 resolveDependency(field, clazz);
             }
         }
@@ -64,20 +72,34 @@ public class DependencyResolver {
     }
 
     public void destroy(Object object) throws DestroyUnitException {
-        for (Field field : object.getClass().getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && !Modifier.isStatic(field.getModifiers())) {
-                dependencies.get(field.getType()).remove(object);
+        destroy(object, object.getClass());
+        garbageCollector();
+    }
+
+    private void destroy(Object object, Class clazz) throws DestroyUnitException {
+        for (Field field : clazz.getDeclaredFields()) {
+            BigDataUnit prairieUnit = field.getAnnotation(BigDataUnit.class);
+            if (prairieUnit != null && !Modifier.isStatic(field.getModifiers())) {
+                List<Object> links = dependencies.get(field.getType());
+                if(links != null) {
+                    links.remove(object);
+                }
             }
         }
-        garbageCollector();
+        Class parentClass = clazz.getSuperclass();
+        if(parentClass != null && !parentClass.equals(Object.class)) {
+            destroy(object, parentClass);
+        }
     }
 
     public void destroyStatic(Class clazz) throws DestroyUnitException {
         for (Field field : clazz.getClass().getDeclaredFields()) {
-            BigDataUnit bigDataUnit = field.getAnnotation(BigDataUnit.class);
-            if (bigDataUnit != null && Modifier.isStatic(field.getModifiers())) {
-                dependencies.get(field.getType()).remove(clazz);
+            BigDataUnit prairieUnit = field.getAnnotation(BigDataUnit.class);
+            if (prairieUnit != null && Modifier.isStatic(field.getModifiers())) {
+                List<Object> links = dependencies.get(field.getType());
+                if(links != null) {
+                    links.remove(clazz);
+                }
             }
         }
         garbageCollector();
@@ -87,7 +109,7 @@ public class DependencyResolver {
         boolean destroyAtLeastOne = true;
         while (destroyAtLeastOne) {
             destroyAtLeastOne = false;
-            List<Class> destroyedComponents = new ArrayList<Class>();
+            List<Class> destroyedComponents = new ArrayList<>();
             for (Map.Entry<Class, Unit> classEmbeddedComponentEntry : units.entrySet()) {
                 if (dependencies.get(classEmbeddedComponentEntry.getKey()).isEmpty()) {
                     for (List<Object> objects : dependencies.values()) {
@@ -110,11 +132,13 @@ public class DependencyResolver {
             if (embeddedComponent == null) {
                 embeddedComponent = clazz.newInstance();
                 units.put(clazz, embeddedComponent);
+                dependencies.put(clazz, new ArrayList<>());
                 resolve(embeddedComponent);
                 embeddedComponent.start();
             }
             return embeddedComponent;
         } catch (InstantiationException | IllegalAccessException e) {
+            units.remove(clazz);
             throw new BigDataTestFrameworkException(e);
         }
     }
