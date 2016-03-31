@@ -95,8 +95,8 @@ and replace unit.id with data from table below
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Apache_Hive_logo.svg/2000px-Apache_Hive_logo.svg.png" height="100">
 <img src="https://cwiki.apache.org/confluence/download/attachments/30737784/oozie_282x1178.png?version=1&modificationDate=1349284899000&api=v2" height="100">
 <img src="https://flume.apache.org/_static/flume-logo.png" height="100">
-<img src="https://svn.apache.org/repos/asf/zookeeper/logo/zookeeper.jpg" height="100">
-<img src="https://svn.apache.org/repos/asf/kafka/site/logos/originals/png/ICON%20-%20Black%20on%20Transparent.png" height="100">
+<img src="https://s3.amazonaws.com/files.dezyre.com/images/Tutorials/zookeeper_logo.png" height="100">
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Apache_kafka.png" height="100">
 <img src="https://www.mapr.com/sites/default/files/pig-image.png" height="100">
 
 |Technology|Version|
