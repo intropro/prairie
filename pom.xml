@@ -39,9 +39,9 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:git:git@github.com:intropro/prairie.git</connection>
-        <developerConnection>scm:git:git@github.com:intropro/prairie.git</developerConnection>
-        <url>git@github.com:intropro/prairie.git</url>
+        <connection>scm:git:ssh@github.com:intropro/prairie.git</connection>
+        <developerConnection>scm:git:ssh@github.com:intropro/prairie.git</developerConnection>
+        <url>https://github.com/intropro/prairie</url>
     </scm>
 
     <modules>
