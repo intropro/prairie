@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0.2-SNAPSHOT</version>
     <name>Prairie</name>
-    <description>BigData Embedded Cluster for Testing</description>
+    <description>Embedded Environment for Testing</description>
     <url>https://github.com/intropro/prairie</url>
 
     <licenses>
