@@ -1,9 +1,7 @@
-#Prairie - BigData Embedded Cluster for Testing
+#Prairie - Embedded Environment for Testing
 
 ###Overview
-This framework can help you to write tests for your big data products. It supports majority modern BigData technologies.
-
-Notice: API can be changed before version 1.1.0
+This framework can help you to write tests for your big data and not only products. It supports majority modern BigData technologies.
 
 ###Look closer
 Framework consists of *units*. Unit is the service which responsible for one of the technologies(yarn, hive, etc).
@@ -76,32 +74,46 @@ To use one of units you need to put dependency to you pom.xml
 <dependency>
     <groupId>com.intropro.prairie</groupId>
     <artifactId>${unit.id}</artifactId>
-    <version>${unit.version}</version>
+    <version>1.1.0</version>
 </dependency>
 ```
-and replace unit.version and unit.id with data from table below
+and replace unit.id with data from table below
 
 |Unit ID|Unit Version|
 |-------|------------|
-|hdfs-unit|1.0.0|
-|yarn-unit|1.0.0|
-|hive2-unit|1.0.0|
-|oozie-unit|1.0.0|
-|flume-unit|1.0.0|
-|zookeeper-unit|1.0.0|
-|kafka-unit|1.0.0|
-|pig-unit|1.0.0|
+|hdfs-unit|1.1.0|
+|yarn-unit|1.1.0|
+|hive2-unit|1.1.0|
+|oozie-unit|1.1.0|
+|flume-unit|1.1.0|
+|zookeeper-unit|1.1.0|
+|kafka-unit|1.1.0|
+|pig-unit|1.1.0|
+
 ###Technologies
-|Technology Name|Technology Version|
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hadoop_logo.svg/664px-Hadoop_logo.svg.png" height="100">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Apache_Hive_logo.svg/2000px-Apache_Hive_logo.svg.png" height="100">
+<img src="https://cwiki.apache.org/confluence/download/attachments/30737784/oozie_282x1178.png?version=1&modificationDate=1349284899000&api=v2" height="100">
+<img src="https://flume.apache.org/_static/flume-logo.png" height="100">
+<img src="https://svn.apache.org/repos/asf/zookeeper/logo/zookeeper.jpg" height="100">
+<img src="https://svn.apache.org/repos/asf/kafka/site/logos/originals/png/ICON%20-%20Black%20on%20Transparent.png" height="100">
+<img src="https://www.mapr.com/sites/default/files/pig-image.png" height="100">
+
+|Technology|Version|
 |----|-------|
-|Hdfs|2.7.1|
-|Yarn|2.7.1|
-|Hive|1.2.1|
-|Oozie|4.2.0|
-|Flume|1.6.0|
-|Zookeeper|3.4.6|
-|Kafka|0.8.2.2|
-|Pig|0.15.0|
+|Hadoop|2.2.0 or higher|
+|Hive|1.0.1 or higher|
+|Oozie|4.0.0 or higher|
+|Flume|1.5.0 or higher|
+|Zookeeper|3.4.5 or higher|
+|Kafka|0.8.2.2 or higher|
+|Pig|0.12.0 or higher|
+
+###Supported Platforms
+|Platform|Version|
+|----|-------|
+|CDH|5.2.0 or higher|
+|HDP|2.2.0 or higher|
 
 ###JUnit
 Framework have junit runner *PrairieRunner* which initialize all units, and resolve inner dependencies.
@@ -110,7 +122,7 @@ To use it you need to put dependency to your pom.xml:
 <dependency>
     <groupId>com.intropro.prairie</groupId>
     <artifactId>junit-runner</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
