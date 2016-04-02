@@ -75,6 +75,7 @@
         <zookeeper.version>3.4.6</zookeeper.version>
         <kafka.version>0.8.2.2</kafka.version>
         <pig.version>0.15.0</pig.version>
+        <hbase.version>1.2.0</hbase.version>
         <hsqldb.version>2.3.3</hsqldb.version>
         <commons-csv.version>1.2</commons-csv.version>
         <commons-codec.version>1.10</commons-codec.version>
@@ -324,6 +325,11 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hbase</groupId>
+                <artifactId>hbase-testing-util</artifactId>
+                <version>${hbase.version}</version>
             </dependency>
 
             <!--test dependencies-->

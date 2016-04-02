@@ -21,6 +21,7 @@
         <module>kafka-unit</module>
         <module>pig-unit</module>
         <module>cmd-unit</module>
+        <module>hbase-unit</module>
     </modules>
 
 
