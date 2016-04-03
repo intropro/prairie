@@ -52,12 +52,12 @@ public class FlumeKafkaSourceTest {
             messages.add(message);
             kafkaProducer.put(message);
         }
-        new Waiter(5000, new EventChecker() {
+        Assert.assertTrue(new Waiter(5000, new EventChecker() {
             @Override
             public boolean check() {
                 return flumeAgent.getSink("sink").processedEventCount() == messages.size();
             }
-        }).await();
+        }).await());
         Assert.assertEquals("Unexpected event count processed", messages.size(), flumeAgent.getSink("sink").processedEventCount());
         flumeAgent.close();
         List<String> resultLines = FileUtils.readLineInDirectory(outputFolder);

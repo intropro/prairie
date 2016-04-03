@@ -55,7 +55,7 @@ public class ZookeeperUnit extends BaseUnit {
         zkProperties = new Properties();
         zkProperties.put("clientPort", port);
         zkProperties.put("tickTime", 50);
-        zkProperties.setProperty("dataDir", getTmpDir().toString());
+        zkProperties.setProperty("dataDir", getTmpDir().resolve("data").toUri().toString());
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
             quorumConfiguration.parseProperties(zkProperties);
