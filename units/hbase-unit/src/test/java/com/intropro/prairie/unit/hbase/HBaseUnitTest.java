@@ -8,7 +8,9 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,9 +31,20 @@ public class HBaseUnitTest {
     @PrairieUnit
     private HBaseUnit hBaseUnit;
 
+    private Connection connection;
+
+    @Before
+    public void setUp() throws Exception {
+        connection = ConnectionFactory.createConnection(hBaseUnit.getConfig());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        connection.close();
+    }
+
     @Test
     public void testCreateTable() throws Exception {
-        Connection connection = ConnectionFactory.createConnection(hBaseUnit.getConfig());
         Admin admin = connection.getAdmin();
 
         TableName[] tableNames = admin.listTableNames();
@@ -45,8 +58,7 @@ public class HBaseUnitTest {
     }
 
     @Test
-    public void testInsertGet() throws Exception {
-        Connection connection = ConnectionFactory.createConnection(hBaseUnit.getConfig());
+    public void testInsertGetDelete() throws Exception {
         createTestTable(connection);
 
         Table table = connection.getTable(TableName.valueOf(tableName));
@@ -60,11 +72,14 @@ public class HBaseUnitTest {
         Result result = table.get(new Get(Bytes.toBytes(rowId)));
         Assert.assertEquals(rowValue,
                 Bytes.toString(result.getValue(Bytes.toBytes(familyName), Bytes.toBytes(columnName))));
+
+        table.delete(new Delete(Bytes.toBytes(rowId)));
+        result = table.get(new Get(Bytes.toBytes(rowId)));
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
     public void testScan() throws Exception {
-        Connection connection = ConnectionFactory.createConnection(hBaseUnit.getConfig());
         createTestTable(connection);
 
         int rowCount = 100;
