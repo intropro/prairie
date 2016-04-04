@@ -9,6 +9,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
 import org.apache.hadoop.hbase.HConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -16,6 +18,8 @@ import java.io.IOException;
  * Created by presidentio on 4/2/16.
  */
 public class HBaseUnit extends HadoopUnit {
+
+    private static final Logger LOGGER = LogManager.getLogger(HBaseUnit.class);
 
     @PrairieUnit
     private ZookeeperUnit zookeeperUnit;
@@ -32,6 +36,7 @@ public class HBaseUnit extends HadoopUnit {
         conf.addResource("hbase-site.prairie.xml");
         conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("data").toUri().toString());
         conf.set(HConstants.ZOOKEEPER_QUORUM, zookeeperUnit.getHost() + ":" + zookeeperUnit.getPort());
+        conf.set(HConstants.ZK_CFG_PROPERTY_PREFIX + HConstants.CLIENT_PORT_STR, "" + zookeeperUnit.getPort());
         return conf;
     }
 
