@@ -446,6 +446,10 @@
         </profile>
 
         <profile>
+            <id>apache</id>
+        </profile>
+
+        <profile>
             <id>cloudera</id>
             <repositories>
                 <repository>
