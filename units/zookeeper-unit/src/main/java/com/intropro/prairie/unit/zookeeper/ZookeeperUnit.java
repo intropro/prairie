@@ -52,10 +52,11 @@ public class ZookeeperUnit extends BaseUnit {
     @Override
     protected void init() throws InitUnitException {
         port = PortProvider.nextPort();
+        LOGGER.info("Port " + port + " reserved for zookeeper");
         zkProperties = new Properties();
         zkProperties.put("clientPort", port);
-        zkProperties.put("tickTime", 50);
-        zkProperties.setProperty("dataDir", getTmpDir().resolve("data").toUri().toString());
+        zkProperties.put("tickTime", 200);
+        zkProperties.setProperty("dataDir", getTmpDir().resolve("data").toString());
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();
         try {
             quorumConfiguration.parseProperties(zkProperties);

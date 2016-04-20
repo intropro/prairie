@@ -1,5 +1,6 @@
 package com.intropro.prairie.unit.hbase;
 
+import com.intropro.prairie.unit.common.PortProvider;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
@@ -34,7 +35,9 @@ public class HBaseUnit extends HadoopUnit {
     protected Configuration gatherConfigs() {
         Configuration conf = HBaseConfiguration.create(super.gatherConfigs());
         conf.addResource("hbase-site.prairie.xml");
-        conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("data").toUri().toString());
+        conf.setInt(HConstants.MASTER_PORT, PortProvider.nextPort());
+        conf.setInt(HConstants.REGIONSERVER_PORT, PortProvider.nextPort());
+        conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("data").toString());
         conf.set(HConstants.ZOOKEEPER_QUORUM, zookeeperUnit.getHost() + ":" + zookeeperUnit.getPort());
         conf.set(HConstants.ZK_CFG_PROPERTY_PREFIX + HConstants.CLIENT_PORT_STR, "" + zookeeperUnit.getPort());
         return conf;
