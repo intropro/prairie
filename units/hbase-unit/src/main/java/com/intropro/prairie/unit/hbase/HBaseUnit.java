@@ -7,6 +7,7 @@ import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
 import com.intropro.prairie.unit.zookeeper.ZookeeperUnit;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
 import org.apache.hadoop.hbase.HConstants;
@@ -33,11 +34,12 @@ public class HBaseUnit extends HadoopUnit {
 
     @Override
     protected Configuration gatherConfigs() {
+        System.setProperty("test.build.data.basedirectory", getTmpDir().resolve("data").toString());
         Configuration conf = HBaseConfiguration.create(super.gatherConfigs());
         conf.addResource("hbase-site.prairie.xml");
         conf.setInt(HConstants.MASTER_PORT, PortProvider.nextPort());
         conf.setInt(HConstants.REGIONSERVER_PORT, PortProvider.nextPort());
-        conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("data").toString());
+        conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("root").toString());
         conf.set(HConstants.ZOOKEEPER_QUORUM, zookeeperUnit.getHost() + ":" + zookeeperUnit.getPort());
         conf.set(HConstants.ZK_CFG_PROPERTY_PREFIX + HConstants.CLIENT_PORT_STR, "" + zookeeperUnit.getPort());
         return conf;
@@ -52,6 +54,8 @@ public class HBaseUnit extends HadoopUnit {
     protected void destroy() throws DestroyUnitException {
         try {
             hBaseTestingUtility.shutdownMiniHBaseCluster();
+            FileSystem.get(hBaseTestingUtility.getConfiguration()).delete(hBaseTestingUtility.getDefaultRootDirPath(),
+                    true);
         } catch (IOException e) {
             throw new DestroyUnitException("Failed to shutdown hbase mini cluster", e);
         }
@@ -60,6 +64,12 @@ public class HBaseUnit extends HadoopUnit {
     @Override
     protected void init() throws InitUnitException {
         hBaseTestingUtility = new HBaseTestingUtility(gatherConfigs());
+        try {
+            FileSystem.get(hBaseTestingUtility.getConfiguration()).delete(hBaseTestingUtility.getDefaultRootDirPath(),
+                    true);
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
         try {
             hBaseTestingUtility.startMiniHBaseCluster(1, 1);
         } catch (Exception e) {
