@@ -64,6 +64,10 @@
           "items": "int"
         }
       }
+    },
+    {
+      "name": "field12",
+      "type": ["string","int"]
     }
   ]
 }

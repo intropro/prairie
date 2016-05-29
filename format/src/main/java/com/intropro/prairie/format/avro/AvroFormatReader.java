@@ -17,6 +17,7 @@ import com.intropro.prairie.format.AbstractFormatReader;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileStream;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
@@ -78,6 +79,9 @@ public class AvroFormatReader extends AbstractFormatReader<Map<String, Object>> 
                 return parseList((List<Object>) object, schema);
             case MAP:
                 return parseMap((Map<Object, Object>) object, schema);
+            case UNION:
+                int typePosition = GenericData.get().resolveUnion(schema, object);
+                return parseObject(object, schema.getTypes().get(typePosition));
             default:
                 throw new IOException("Type does not supported yes: " + schema.getType());
         }
