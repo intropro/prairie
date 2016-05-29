@@ -1,0 +1,5 @@
+{"field1":"value11","field2":"value21","field3":"value31","FIELD":{"field4.field1":"field4.value11","field4.field2":"field4.value21"}}
+{"field1":"value12","field2":"value22","FIELD":{"field4.field1":"field4.value12","field4.field2":"field4.value22"}}
+{"field1":"value13","field2":"value23","field3":"value33","FIELD":{"field4.field1":"field4.value13","field4.field2":"field4.value23"}}
+{"field1":"value14","field2":"value24","field3":"value34","FIELD":{"field4.field1":"field4.value14","field4.field2":"field4.value24"}}
+{"field1":"value15","field2":"value25","field3":"value35","FIELD":{"field4.field1":"field4.value15","field4.field2":"field4.value25"}}
