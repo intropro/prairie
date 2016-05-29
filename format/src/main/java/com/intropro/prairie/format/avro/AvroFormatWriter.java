@@ -73,8 +73,10 @@ public class AvroFormatWriter implements OutputFormatWriter<Map<String, Object>>
                 return transformToList((List<Object>) object, schema);
             case MAP:
                 return transformToMap((Map<String, Object>) object, schema);
+            case UNION:
+                return object;//TODO: check all cases
             default:
-                throw new IOException("Type does not supported yes: " + schema.getType());
+                throw new IOException("Type does not supported yet: " + schema.getType());
         }
     }
 
