@@ -68,13 +68,7 @@ public class PigUnit extends HadoopUnit {
     protected void init() throws InitUnitException {
         try {
             Configuration configuration = gatherConfigs();
-            ExecType execType;
-            if (configuration.get("mapreduce.framework.name").equals("local")) {
-                execType = ExecType.LOCAL;
-            } else {
-                execType = ExecType.MAPREDUCE;
-            }
-            PigContext pigContext = new PigContext(execType, configuration);
+            PigContext pigContext = new PigContext(ExecType.MAPREDUCE, configuration);
             pigServer = new PigServer(pigContext);
         } catch (PigException e) {
             throw new InitUnitException(e);
