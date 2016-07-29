@@ -23,6 +23,7 @@ import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import com.intropro.prairie.unit.yarn.YarnUnit;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.metastore.HiveMetaStore;
 import org.apache.hive.service.server.HiveServer2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +53,7 @@ public class Hive2Unit extends HadoopUnit {
     private HdfsUnit hdfsUnit;
 
     private int port;
+    private int metastorePort;
     private String jdbcUrl;
     private String metastoreJdbcUrl;
 
@@ -67,8 +69,21 @@ public class Hive2Unit extends HadoopUnit {
         } catch (IOException e) {
             throw new InitUnitException("Failed to create hive home directory: " + HIVE_HOME, e);
         }
+        metastorePort = PortProvider.nextPort();
+        final HiveConf hiveConf = gatherConfigs();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //TODO: remove static call
+                    HiveMetaStore.startMetaStore(metastorePort, null, hiveConf);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        }).start();
         hiveServer = new HiveServer2();
-        hiveServer.init(gatherConfigs());
+        hiveServer.init(hiveConf);
         hiveServer.start();
         jdbcUrl = String.format("jdbc:hive2://%s:%s/default", HIVE_HOST, port);
     }
@@ -87,6 +102,8 @@ public class Hive2Unit extends HadoopUnit {
         hiveConf.setVar(HiveConf.ConfVars.METASTOREWAREHOUSE, getTmpDir().resolve("warehouse").toString());
         hiveConf.setIntVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT, port);
         hiveConf.setVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, HIVE_HOST);
+        hiveConf.setVar(HiveConf.ConfVars.METASTOREURIS,
+                "thrift://" + hiveConf.getVar(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST) + ":" + metastorePort);
         metastoreJdbcUrl = "jdbc:hsqldb:mem:" + UUID.randomUUID().toString();
         hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, metastoreJdbcUrl + ";create=true");
         return hiveConf;
@@ -124,7 +141,8 @@ public class Hive2Unit extends HadoopUnit {
     private static Version getVersion() {
         Properties properties = new Properties();
         try {
-            properties.load(Hive2Unit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.apache.hive/hive-common/pom.properties"));
+            properties.load(Hive2Unit.class.getClassLoader()
+                    .getResourceAsStream("META-INF/maven/org.apache.hive/hive-common/pom.properties"));
         } catch (IOException e) {
             LOGGER.error("Can't load hive version", e);
         }
