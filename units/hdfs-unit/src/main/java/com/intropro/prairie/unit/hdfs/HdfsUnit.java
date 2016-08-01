@@ -36,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.Properties;
 
 /**
  * Created by presidentio on 03.09.15.
@@ -46,7 +45,7 @@ public class HdfsUnit extends HadoopUnit {
 
     private static final Logger LOGGER = LogManager.getLogger(HdfsUnit.class);
 
-    public static final Version VERSION = getVersion();
+    public static final Version VERSION = getVersion("org.apache.hadoop", "hadoop-hdfs");
 
     private MiniDFSCluster miniDFSCluster;
 
@@ -165,16 +164,6 @@ public class HdfsUnit extends HadoopUnit {
                                           String expectedResource, Format<T> expectedFormat) throws IOException {
         InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
         return compare(path, format, expectedStream, expectedFormat);
-    }
-
-    private static Version getVersion() {
-        Properties properties = new Properties();
-        try {
-            properties.load(HdfsUnit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.apache.hadoop/hadoop-hdfs/pom.properties"));
-        } catch (IOException e) {
-            LOGGER.error("Can't load hdfs version", e);
-        }
-        return new Version(properties.getProperty("version", "unknown"));
     }
 
 }

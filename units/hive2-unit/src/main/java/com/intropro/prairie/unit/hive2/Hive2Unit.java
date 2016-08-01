@@ -38,7 +38,7 @@ public class Hive2Unit extends HadoopUnit {
 
     private static final Logger LOGGER = LogManager.getLogger(Hive2Unit.class);
 
-    public static final Version VERSION = getVersion();
+    public static final Version VERSION = getVersion("org.apache.hive", "hive-common");
 
     public static final String HIVE_HOME = "/user/hive";
     public static final String HIVE_HOST = "localhost";
@@ -136,17 +136,6 @@ public class Hive2Unit extends HadoopUnit {
     public HiveConf getConfig() {
         HiveConf hiveConf = new HiveConf(hiveServer.getHiveConf());
         return hiveConf;
-    }
-
-    private static Version getVersion() {
-        Properties properties = new Properties();
-        try {
-            properties.load(Hive2Unit.class.getClassLoader()
-                    .getResourceAsStream("META-INF/maven/org.apache.hive/hive-common/pom.properties"));
-        } catch (IOException e) {
-            LOGGER.error("Can't load hive version", e);
-        }
-        return new Version(properties.getProperty("version", "unknown"));
     }
 
 }
