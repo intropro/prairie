@@ -89,6 +89,11 @@
         <log4j.version>2.5</log4j.version>
         <joda-time.version>2.5</joda-time.version>
         <jline.version>0.9.94</jline.version>
+        <sshd.version>1.2.0</sshd.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <bouncycastle.version>1.55</bouncycastle.version>
+        <apacheds.server.version>2.0.0-M23</apacheds.server.version>
+        <apacheds.api.version>1.0.0-M33</apacheds.api.version>
 
         <!--test dependencies versions-->
         <junit.version>4.12</junit.version>
@@ -171,6 +176,16 @@
             <dependency>
                 <groupId>com.intropro.prairie</groupId>
                 <artifactId>cmd-unit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intropro.prairie</groupId>
+                <artifactId>sshd-unit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intropro.prairie</groupId>
+                <artifactId>kerberos-unit</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

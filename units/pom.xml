@@ -22,6 +22,7 @@
         <module>pig-unit</module>
         <module>cmd-unit</module>
         <module>hbase-unit</module>
+        <module>kerberos-unit</module>
     </modules>
 
 

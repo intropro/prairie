@@ -85,6 +85,6 @@ public class YarnUnit extends HadoopUnit {
     }
 
     public String getJobTracker() {
-        return getConfig().get("yarn.resourcemanager.address");
+        return getConfig().get(YarnConfiguration.RM_ADDRESS);
     }
 }
