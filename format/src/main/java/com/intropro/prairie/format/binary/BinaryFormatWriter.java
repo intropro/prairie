@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intropro.prairie.format.text;
+package com.intropro.prairie.format.binary;
 
 import com.intropro.prairie.format.OutputFormatWriter;
 
@@ -21,23 +21,17 @@ import java.io.OutputStream;
 /**
  * Created by presidentio on 10/7/15.
  */
-public class TextFormatWriter implements OutputFormatWriter<String> {
+public class BinaryFormatWriter implements OutputFormatWriter<byte[]> {
 
     private OutputStream outputStream;
 
-    private boolean firstLine = true;
-
-    TextFormatWriter(OutputStream outputStream) {
+    BinaryFormatWriter(OutputStream outputStream) {
         this.outputStream = outputStream;
     }
 
     @Override
-    public void write(String line) throws IOException {
-        if (!firstLine) {
-            outputStream.write(System.lineSeparator().getBytes());
-        }
-        outputStream.write(line.getBytes());
-        firstLine = false;
+    public void write(byte[] buffer) throws IOException {
+        outputStream.write(buffer);
     }
 
     @Override
