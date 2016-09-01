@@ -145,7 +145,7 @@ public abstract class BaseUnit implements Unit {
             e.printStackTrace();
         }
 
-        return new Version("unknown");
+        return Version.UNKNOWN;
     }
 
 }
