@@ -18,12 +18,15 @@ import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
+import com.intropro.prairie.format.binary.BinaryFormat;
 import com.intropro.prairie.format.exception.FormatException;
+import com.intropro.prairie.unit.cmd.CmdUnit;
 import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
+import com.intropro.prairie.unit.hdfs.cmd.HdfsShell;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -42,6 +45,9 @@ import java.io.SequenceInputStream;
  */
 @PrairieUnit
 public class HdfsUnit extends HadoopUnit {
+
+    @PrairieUnit
+    private CmdUnit cmdUnit;
 
     private static final Logger LOGGER = LogManager.getLogger(HdfsUnit.class);
 
@@ -63,6 +69,7 @@ public class HdfsUnit extends HadoopUnit {
             miniDFSCluster = new MiniDFSCluster.Builder(gatherConfigs()).build();
             miniDFSCluster.waitClusterUp();
             createHomeDirectory();
+            cmdUnit.declare("hdfs", new HdfsShell(getConfig()));
         } catch (IOException e) {
             throw new InitUnitException("Failed to start hdfs", e);
         }
@@ -122,6 +129,10 @@ public class HdfsUnit extends HadoopUnit {
         } catch (FormatException e) {
             throw new IOException(e);
         }
+    }
+
+    public void saveAs(InputStream inputStream, String dstPath) throws IOException {
+        saveAs(inputStream, dstPath, new BinaryFormat(), new BinaryFormat());
     }
 
     public <T> CompareResponse<T> compare(Path path, Format<T> format,
