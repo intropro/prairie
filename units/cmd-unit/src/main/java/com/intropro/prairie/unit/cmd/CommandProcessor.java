@@ -38,12 +38,17 @@ public class CommandProcessor extends Thread {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             String alias = bufferedReader.readLine();
             List<String> args = parseArgs(bufferedReader.readLine());
-            LOGGER.info("Command started [" + alias + "] with args: " + args);
+            LOGGER.info("Starting command [" + alias + "] with args: " + args);
             Command command = commandProvider.getCommand(alias);
             int status = 0;
             try {
                 printWriter.write(FIRST_LINE_MARKER);
-                status = command.exec(args, bufferedReader, printWriter);
+                if (command != null) {
+                    status = command.exec(args, bufferedReader, printWriter);
+                } else {
+                    LOGGER.error("Command [" + alias + "] not found");
+                    status = -1;
+                }
                 printWriter.write("\n" + status);
                 printWriter.flush();
             } catch (InterruptedException e) {
