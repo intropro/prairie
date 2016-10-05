@@ -56,7 +56,7 @@ public class CompareResponse<Entry> {
             message += "\nUnexpected lines: " + getUnexpected();
         }
         if (!getMissed().isEmpty()) {
-            message += "\nMissed lines: " + getMissed();
+            message += "\nMissed lines:     " + getMissed();
         }
         assert getUnexpected().isEmpty() && getMissed().isEmpty() : message;
     }

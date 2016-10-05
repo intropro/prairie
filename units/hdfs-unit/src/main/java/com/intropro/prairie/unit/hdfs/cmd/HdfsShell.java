@@ -26,14 +26,13 @@ public class HdfsShell implements Command {
 
     @Override
     public int exec(List<String> args, Reader in, Writer out) throws InterruptedException, IOException {
-        FsShell fsShell = new FsShell(configuration);
+        FsShell fsShell = new FsShellWithIO(configuration, in, out);
         try {
-            fsShell.run(args.subList(1, args.size()).toArray(new String[args.size() - 1]));
+            return fsShell.run(args.subList(1, args.size()).toArray(new String[args.size() - 1]));
         } catch (Exception e) {
             LOGGER.error("Failed to execute hdfs shell with args: " + args, e);
             return 1;
         }
-        return 0;
     }
 
     @Override
