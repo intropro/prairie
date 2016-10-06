@@ -84,17 +84,17 @@ and replace unit.id with data from table below
 
 |Unit ID|Unit Version|
 |-------|------------|
-|hdfs-unit|1.1.1|
-|yarn-unit|1.1.1|
-|hive2-unit|1.1.1|
-|oozie-unit|1.1.1|
-|flume-unit|1.1.1|
-|zookeeper-unit|1.1.1|
-|kafka-unit|1.1.1|
-|pig-unit|1.1.1|
-|cmd-unit|1.1.1|
-|hbase-unit|1.1.1|
-|cassandra-unit|1.1.1|
+|hdfs-unit|1.2.0|
+|yarn-unit|1.2.0|
+|hive2-unit|1.2.0|
+|oozie-unit|1.2.0|
+|flume-unit|1.2.0|
+|zookeeper-unit|1.2.0|
+|kafka-unit|1.2.0|
+|pig-unit|1.2.0|
+|cmd-unit|1.2.0|
+|hbase-unit|1.2.0|
+|cassandra-unit|1.2.0|
 
 ###Technologies
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hadoop_logo.svg/664px-Hadoop_logo.svg.png" height="100">
@@ -132,7 +132,7 @@ To use it you need to put dependency to your pom.xml:
 <dependency>
     <groupId>com.intropro.prairie</groupId>
     <artifactId>junit-runner</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
