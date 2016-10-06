@@ -41,6 +41,9 @@ More examples you can find in test directories for each unit:
 [Flume](https://github.com/intropro/prairie/blob/master/units/flume-unit/src/test/java/com/intropro/prairie/unit/flume/FlumeUnitTest.java),
 [Zookeeper](https://github.com/intropro/prairie/blob/master/units/zookeeper-unit/src/test/java/com/intropro/prairie/unit/zookeeper/ZookeeperUnitTest.java),
 [Kafka](https://github.com/intropro/prairie/blob/master/units/kafka-unit/src/test/java/com/intropro/prairie/unit/kafka/KafkaUnitTest.java)
+[Cmd](https://github.com/intropro/prairie/blob/master/units/cmd-unit/src/test/java/com/intropro/prairie/unit/cmd/CmdUnitTest.java)
+[HBase](https://github.com/intropro/prairie/blob/master/units/cmd-unit/src/test/java/com/intropro/prairie/unit/hbase/HBaseUnitTest.java)
+[Cassandra](https://github.com/intropro/prairie/blob/master/units/cmd-unit/src/test/java/com/intropro/prairie/unit/cassandra/CassandraUnitTest.java)
 
 ####Example of hive unit
 ```java
@@ -81,14 +84,17 @@ and replace unit.id with data from table below
 
 |Unit ID|Unit Version|
 |-------|------------|
-|hdfs-unit|1.1.0|
-|yarn-unit|1.1.0|
-|hive2-unit|1.1.0|
-|oozie-unit|1.1.0|
-|flume-unit|1.1.0|
-|zookeeper-unit|1.1.0|
-|kafka-unit|1.1.0|
-|pig-unit|1.1.0|
+|hdfs-unit|1.1.1|
+|yarn-unit|1.1.1|
+|hive2-unit|1.1.1|
+|oozie-unit|1.1.1|
+|flume-unit|1.1.1|
+|zookeeper-unit|1.1.1|
+|kafka-unit|1.1.1|
+|pig-unit|1.1.1|
+|cmd-unit|1.1.1|
+|hbase-unit|1.1.1|
+|cassandra-unit|1.1.1|
 
 ###Technologies
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hadoop_logo.svg/664px-Hadoop_logo.svg.png" height="100">
@@ -98,6 +104,8 @@ and replace unit.id with data from table below
 <img src="https://s3.amazonaws.com/files.dezyre.com/images/Tutorials/zookeeper_logo.png" height="100">
 <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Apache_kafka.png" height="100">
 <img src="https://www.mapr.com/sites/default/files/pig-image.png" height="100">
+<img src="http://hbase.apache.org/images/hbase_logo.png" height="100">
+<img src="http://cassandra.apache.org/img/cassandra_logo.png" height="100">
 
 |Technology|Version|
 |----|-------|
@@ -108,6 +116,8 @@ and replace unit.id with data from table below
 |Zookeeper|3.4.5 or higher|
 |Kafka|0.8.2.2 or higher|
 |Pig|0.12.0 or higher|
+|HBase|1.2.0|
+|Cassandra|3.9|
 
 ###Supported Platforms
 |Platform|Version|
@@ -122,7 +132,7 @@ To use it you need to put dependency to your pom.xml:
 <dependency>
     <groupId>com.intropro.prairie</groupId>
     <artifactId>junit-runner</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
