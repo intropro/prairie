@@ -8,6 +8,7 @@ import com.intropro.prairie.unit.kerberos.exception.KerberosException;
 public interface KerberosUserManager {
 
     KerberosUser addUser(String username, String password) throws KerberosException;
+    KerberosUser addService(String username, String password) throws KerberosException;
 
     KerberosUser getUser(String username);
 

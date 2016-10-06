@@ -35,10 +35,20 @@ public class KerberosUserManagerImpl implements KerberosUserManager {
     @Override
     public KerberosUser addUser(String username, String password) throws KerberosException {
         kerberosServer.addUserEntry(username, password);
-        File keytab = generateKeytab(username, password);
+        File keytab = generateKeytab(username, password, PrincipalNameType.KRB_NT_PRINCIPAL);
         KerberosUser kerberosUser = new KerberosUser(username, password, keytab, kerberosServer.getPrincipal(username));
         kerberosUsers.put(username, kerberosUser);
         LOGGER.info("Added user: " + kerberosUser);
+        return kerberosUser;
+    }
+
+    @Override
+    public KerberosUser addService(String username, String password) throws KerberosException {
+        kerberosServer.addUserEntry(username, password);
+        File keytab = generateKeytab(username, password, PrincipalNameType.KRB_NT_SRV_INST);
+        KerberosUser kerberosUser = new KerberosUser(username, password, keytab, kerberosServer.getPrincipal(username));
+        kerberosUsers.put(username, kerberosUser);
+        LOGGER.info("Added service: " + kerberosUser);
         return kerberosUser;
     }
 
@@ -47,32 +57,19 @@ public class KerberosUserManagerImpl implements KerberosUserManager {
         return kerberosUsers.get(username);
     }
 
-    private File generateKeytab(String username, String passPhrase) throws KerberosException {
-        final Map<String, String> users = new HashMap<>();
-        users.put(username, passPhrase);
+    private File generateKeytab(String username, String passPhrase,
+                                PrincipalNameType principalNameType) throws KerberosException {
         File keytabFile = keytabDirectory.resolve(username + "-" + UUID.randomUUID() + ".ktb").toFile();
         keytabFile.getParentFile().mkdirs();
-        generateKeytab(users, keytabFile);
-        LOGGER.info("Generated keytab " + keytabFile + "for user " + username);
-        return keytabFile;
-    }
-
-    private void generateKeytab(final Map<String, String> keytabUsers, final File keytabFile)
-            throws KerberosException {
         final KerberosTime timeStamp = new KerberosTime(System.currentTimeMillis());
-        final int principalType = PrincipalNameType.KRB_NT_PRINCIPAL.getValue();
-
         final Keytab keytab = Keytab.getInstance();
+        String principal = kerberosServer.getPrincipal(username);
         final List<KeytabEntry> entries = new ArrayList<>();
-
-        for (String keytabUser : keytabUsers.keySet()) {
-            String principal = kerberosServer.getPrincipal(keytabUser);
-            for (Map.Entry<EncryptionType, EncryptionKey> keyEntry : KerberosKeyFactory.getKerberosKeys(
-                    principal, keytabUsers.get(keytabUser)).entrySet()) {
-                final EncryptionKey key = keyEntry.getValue();
-                final byte keyVersion = (byte) key.getKeyVersion();
-                entries.add(new KeytabEntry(principal, principalType, timeStamp, keyVersion, key));
-            }
+        for (Map.Entry<EncryptionType, EncryptionKey> keyEntry : KerberosKeyFactory.getKerberosKeys(
+                principal, passPhrase).entrySet()) {
+            final EncryptionKey key = keyEntry.getValue();
+            final byte keyVersion = (byte) key.getKeyVersion();
+            entries.add(new KeytabEntry(principal, principalNameType.getValue(), timeStamp, keyVersion, key));
         }
         keytab.setEntries(entries);
         try {
@@ -80,6 +77,8 @@ public class KerberosUserManagerImpl implements KerberosUserManager {
         } catch (IOException e) {
             throw new KerberosException("Failed to save keytab to file " + keytabFile, e);
         }
+        LOGGER.info("Generated keytab " + keytabFile + " for user " + username);
+        return keytabFile;
     }
 
 }

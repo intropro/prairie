@@ -4,7 +4,6 @@ import com.intropro.prairie.junit.PrairieRunner;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import org.apache.directory.kerberos.client.KdcConfig;
 import org.apache.directory.kerberos.client.KdcConnection;
-import org.apache.directory.kerberos.client.Kinit;
 import org.apache.directory.shared.kerberos.codec.types.EncryptionType;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -31,7 +30,9 @@ public class KerberosUnitTest {
     public void addUserAndKinit() throws Exception {
         String username = "presidentio";
         String password = "pass";
+        String service = "host/localhost";
         KerberosUser kerberosUser = kerberosUnit.getKerberosUserManager().addUser(username, password);
+        KerberosUser kerberosService = kerberosUnit.getKerberosUserManager().addUser(service, password);
         Assert.assertTrue(kerberosUser.getKeytab().exists());
         KdcConfig kdcConfig = new KdcConfig();
         kdcConfig.setHostName(kerberosUnit.getKdcHost());
@@ -39,9 +40,10 @@ public class KerberosUnitTest {
         kdcConfig.setEncryptionTypes(new HashSet<>(Collections.singletonList(EncryptionType.DES_CBC_MD5)));
         kdcConfig.setUseUdp(false);
         KdcConnection kdcConnection = new KdcConnection(kdcConfig);
-        Kinit kinit = new Kinit(kdcConnection);
-        kinit.setCredCacheFile(folder.newFile());
-        kinit.kinit(kerberosUser.getPrincipal(), password);
+        Assert.assertTrue(kdcConnection.getTgt(kerberosUser.getPrincipal(),
+                kerberosUser.getPassword()).getTicket() != null);
+        Assert.assertTrue(kdcConnection.getServiceTicket(kerberosUser.getPrincipal(),
+                kerberosUser.getPassword(), kerberosService.getPrincipal()).getTicket() != null);
     }
 
 }

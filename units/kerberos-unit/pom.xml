@@ -19,6 +19,10 @@
         </dependency>
         <dependency>
             <groupId>com.intropro.prairie</groupId>
+            <artifactId>cmd-unit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
             <artifactId>junit-runner</artifactId>
             <scope>test</scope>
         </dependency>
@@ -59,7 +63,11 @@
             <artifactId>api-ldap-codec-standalone</artifactId>
             <version>${apacheds.api.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.kerby</groupId>
+            <artifactId>kerb-client-api-all</artifactId>
+            <version>${kerby.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>

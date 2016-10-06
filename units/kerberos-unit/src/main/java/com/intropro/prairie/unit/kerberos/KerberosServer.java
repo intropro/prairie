@@ -96,7 +96,7 @@ public class KerberosServer {
     }
 
     public void addUserEntry(String username, String password) throws KerberosException {
-        String entryDN = "uid=" + getPrincipal(username) + "," + USERS_DN;
+        String entryDN = "uid=" + username + "," + USERS_DN;
         try {
             Entry entry = directoryService.newEntry(new Dn(entryDN));
             entry.add("objectClass", directoryService.getAtProvider().getObjectClass(), "inetOrgPerson",
@@ -116,8 +116,8 @@ public class KerberosServer {
     private void initKdcServer() throws KerberosException {
         KerberosConfig kdcConfig = new KerberosConfig();
         kdcConfig.setSearchBaseDn(USERS_DN);
-        kdcConfig.setServicePrincipal(getPrincipal("prairie/localhost"));
-        kdcConfig.setPrimaryRealm(getPrincipal("prairie/localhost"));
+        kdcConfig.setServicePrincipal(getPrincipal("krbtgt/" + realm));
+        kdcConfig.setPrimaryRealm(realm);
         kdcConfig.setMaximumTicketLifetime(TimeUnit.DAYS.toMillis(1));
         kdcConfig.setMaximumRenewableLifetime(TimeUnit.DAYS.toMillis(1));
         kdcConfig.setForwardableAllowed(true);
@@ -125,6 +125,7 @@ public class KerberosServer {
         kdcConfig.setProxiableAllowed(true);
         kdcConfig.setRenewableAllowed(true);
         kdcConfig.setEmptyAddressesAllowed(true);
+        kdcConfig.setPaEncTimestampRequired(false);
         kdcServer = new KdcServer(kdcConfig);
         try {
             host = InetAddress.getLocalHost().getCanonicalHostName();
