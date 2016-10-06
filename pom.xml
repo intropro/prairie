@@ -86,7 +86,6 @@
         <jackson-asl.version>1.9.1</jackson-asl.version>
         <jcommander.version>1.48</jcommander.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <log4j.version>2.5</log4j.version>
         <joda-time.version>2.5</joda-time.version>
         <jline.version>0.9.94</jline.version>
         <sshd.version>1.2.0</sshd.version>
@@ -94,6 +93,9 @@
         <bouncycastle.version>1.55</bouncycastle.version>
         <apacheds.server.version>2.0.0-M23</apacheds.server.version>
         <apacheds.api.version>1.0.0-M33</apacheds.api.version>
+        <kerby.version>1.0.0-RC2</kerby.version>
+        <cassandra.version>3.9</cassandra.version>
+        <cassandra-driver.version>3.1.0</cassandra-driver.version>
 
         <!--test dependencies versions-->
         <junit.version>4.12</junit.version>
@@ -351,6 +353,43 @@
                 <groupId>org.apache.hbase</groupId>
                 <artifactId>hbase-testing-util</artifactId>
                 <version>${hbase.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cassandra</groupId>
+                <artifactId>cassandra-all</artifactId>
+                <version>${cassandra.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>log4j-over-slf4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.datastax.cassandra</groupId>
+                <artifactId>cassandra-driver-core</artifactId>
+                <version>${cassandra-driver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
 
             <!--test dependencies-->
