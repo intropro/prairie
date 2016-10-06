@@ -8,6 +8,8 @@ import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.kerberos.KerberosUnit;
 import com.intropro.prairie.unit.kerberos.KerberosUser;
 import com.intropro.prairie.unit.kerberos.exception.KerberosException;
+import com.intropro.prairie.unit.sshd.auth.CollectionPasswordAuthenticator;
+import com.intropro.prairie.unit.sshd.auth.MockedGSSAuthFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,6 @@ import org.apache.sshd.common.keyprovider.MappedKeyPairProvider;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.UserAuth;
 import org.apache.sshd.server.auth.gss.GSSAuthenticator;
-import org.apache.sshd.server.auth.gss.UserAuthGSSFactory;
 import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
 import org.apache.sshd.server.auth.pubkey.KeySetPublickeyAuthenticator;
 import org.apache.sshd.server.auth.pubkey.UserAuthPublicKeyFactory;
@@ -57,6 +58,7 @@ public class SshdUnit extends BaseUnit {
     private Path publicKeyPath;
     private PublicKey publicKey;
     private PrivateKey privateKey;
+    private MockedGSSAuthFactory mockedGSSAuthFactory;
 
     public SshdUnit() {
         super("sshd");
@@ -74,7 +76,7 @@ public class SshdUnit extends BaseUnit {
         sshServer.setHost(host);
         try {
             sshServer.setKeyPairProvider(new MappedKeyPairProvider(readHostKeyPair()));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException  e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
             LOGGER.error("Failed to read host key pair", e);
         }
         sshServer.setShellFactory(new ProcessShellFactory("/bin/sh", "-i", "-l"));
@@ -114,17 +116,19 @@ public class SshdUnit extends BaseUnit {
         //password authentication
         collectionPasswordAuthenticator.addUser(defaultUsername, defaultPassword);
         sshServer.setPasswordAuthenticator(collectionPasswordAuthenticator);
+        sshServer.setKeyboardInteractiveAuthenticator(null);
 
         //kerberos authentication
         List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>(3);
-        userAuthFactories.add(new UserAuthGSSFactory());
+        mockedGSSAuthFactory = new MockedGSSAuthFactory();
+        userAuthFactories.add(mockedGSSAuthFactory);
         userAuthFactories.add(new UserAuthPublicKeyFactory());
         userAuthFactories.add(new UserAuthPasswordFactory());
         sshServer.setUserAuthFactories(userAuthFactories);
 
         try {
             String username = "host/" + host;
-            KerberosUser kerberosUser = kerberosUnit.getKerberosUserManager().addUser(username, "pass");
+            KerberosUser kerberosUser = kerberosUnit.getKerberosUserManager().addService(username, "pass");
             GSSAuthenticator authenticator = new GSSAuthenticator();
             authenticator.setKeytabFile(kerberosUser.getKeytab().getAbsolutePath());
             authenticator.setServicePrincipalName(kerberosUser.getPrincipal());
@@ -182,6 +186,11 @@ public class SshdUnit extends BaseUnit {
 
     public void addUser(String username, String password) {
         collectionPasswordAuthenticator.addUser(username, password);
+    }
+
+    @Deprecated
+    public void addKerberosUser(String username) {
+        mockedGSSAuthFactory.addUser(username);
     }
 
     public String getDefaultUsername() {

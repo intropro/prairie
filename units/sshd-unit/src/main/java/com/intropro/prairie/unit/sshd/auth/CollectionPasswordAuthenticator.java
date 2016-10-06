@@ -1,4 +1,4 @@
-package com.intropro.prairie.unit.sshd;
+package com.intropro.prairie.unit.sshd.auth;
 
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;

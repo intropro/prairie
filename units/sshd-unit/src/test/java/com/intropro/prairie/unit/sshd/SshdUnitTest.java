@@ -77,6 +77,8 @@ public class SshdUnitTest {
     @Test
     public void testScpWithKerberos() throws Exception {
         kerberosUnit.getKerberosUserManager().addUser("presidentio", "pass");
+        sshdUnit.addKerberosUser("presidentio");
+        Thread.sleep(TimeUnit.MINUTES.toMillis(100));
         File outputFile = folder.newFile("output");
         File inputFile = folder.newFile("input");
         FileOutputStream fileOutputStream = new FileOutputStream(inputFile);
