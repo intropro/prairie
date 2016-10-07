@@ -5,7 +5,7 @@
     <groupId>com.intropro.prairie</groupId>
     <artifactId>prairie-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <name>Prairie</name>
     <description>Embedded Environment for Testing</description>
     <url>https://github.com/intropro/prairie</url>
@@ -40,7 +40,7 @@
         <connection>scm:git:git@github.com:intropro/prairie.git</connection>
         <developerConnection>scm:git:git@github.com:intropro/prairie.git</developerConnection>
         <url>https://github.com/intropro/prairie</url>
-        <tag>v1.2.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
