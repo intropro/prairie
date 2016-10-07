@@ -38,8 +38,8 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:git:ssh@github.com:intropro/prairie.git</connection>
-        <developerConnection>scm:git:ssh@github.com:intropro/prairie.git</developerConnection>
+        <connection>scm:git:git@github.com:intropro/prairie.git</connection>
+        <developerConnection>scm:git:git@github.com:intropro/prairie.git</developerConnection>
         <url>https://github.com/intropro/prairie</url>
         <tag>HEAD</tag>
     </scm>
