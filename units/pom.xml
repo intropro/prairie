@@ -22,8 +22,8 @@
         <module>pig-unit</module>
         <module>cmd-unit</module>
         <module>hbase-unit</module>
-        <module>kerberos-unit</module>
-        <module>sshd-unit</module>
+        <!--<module>kerberos-unit</module>-->
+        <!--<module>sshd-unit</module>-->
         <module>cassandra-unit</module>
     </modules>
 
