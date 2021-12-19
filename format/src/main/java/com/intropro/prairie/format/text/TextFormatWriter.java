@@ -34,7 +34,7 @@ public class TextFormatWriter implements OutputFormatWriter<String> {
     @Override
     public void write(String line) throws IOException {
         if (!firstLine) {
-            outputStream.write('\n');
+            outputStream.write(System.lineSeparator().getBytes());
         }
         outputStream.write(line.getBytes());
         firstLine = false;

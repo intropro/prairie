@@ -27,6 +27,9 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoSchedule
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /**
  * Created by presidentio on 04.09.15.
  */
@@ -37,6 +40,7 @@ public class YarnUnit extends HadoopUnit {
     private static final String NAME = "prairie-yarn";
 
     private MiniMRYarnCluster miniMR;
+    private String host = "localhost";
 
     @PrairieUnit
     private HdfsUnit hdfsUnit;
@@ -64,6 +68,12 @@ public class YarnUnit extends HadoopUnit {
         yarnConfigs.set("hadoop.proxyuser." + user + ".hosts", "*");
         yarnConfigs.set("hadoop.proxyuser." + user + ".groups", "*");
         yarnConfigs.set("yarn.nodemanager.admin-env", "PATH=$PATH:" + cmdUnit.getPath());
+        try {
+            host = InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
+        } catch (UnknownHostException e) {
+            LOGGER.warn("Failed to get canonical host name. Using default: " + host);
+        }
+        yarnConfigs.set(YarnConfiguration.RM_HOSTNAME, host);
         yarnConfigs.setClass(YarnConfiguration.RM_SCHEDULER, FifoScheduler.class, ResourceScheduler.class);
         yarnConfigs.addResource("mapred-site.prairie.xml");
         yarnConfigs.addResource("yarn-site.prairie.xml");
@@ -85,6 +95,6 @@ public class YarnUnit extends HadoopUnit {
     }
 
     public String getJobTracker() {
-        return getConfig().get("yarn.resourcemanager.address");
+        return getConfig().get(YarnConfiguration.RM_ADDRESS);
     }
 }

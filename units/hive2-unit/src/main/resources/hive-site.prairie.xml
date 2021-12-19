@@ -83,4 +83,8 @@
         <name>hive.server2.async.exec.shutdown.timeout</name>
         <value>5s</value>
     </property>
+    <property>
+        <name>hive.cbo.enable</name>
+        <value>false</value>
+    </property>
 </configuration>

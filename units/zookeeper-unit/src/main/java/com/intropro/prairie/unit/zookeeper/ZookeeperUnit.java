@@ -129,4 +129,8 @@ public class ZookeeperUnit extends BaseUnit {
     public int getPort() {
         return port;
     }
+
+    public String getQuorum(){
+        return getHost() + ":" + getPort();
+    }
 }

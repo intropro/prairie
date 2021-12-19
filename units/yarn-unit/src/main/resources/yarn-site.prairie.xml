@@ -99,8 +99,4 @@
         <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
         <value>100</value>
     </property>
-    <property>
-        <name>yarn.resourcemanager.hostname</name>
-        <value>127.0.1.1</value>
-    </property>
 </configuration>

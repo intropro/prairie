@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>units</artifactId>
+        <groupId>com.intropro.prairie</groupId>
+        <version>1.2.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cassandra-unit</artifactId>
+
+    <dependencies>
+        <!--inner dependencies-->
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>unit-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intropro.prairie</groupId>
+            <artifactId>junit-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--lib dependencies-->
+        <dependency>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>cassandra-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+        </dependency>
+
+        <!--test dependencies-->
+
+    </dependencies>
+
+
+</project>

@@ -5,6 +5,10 @@ package com.intropro.prairie.unit.common;
  */
 public class Version implements Comparable {
 
+    private static final String UNKNOWN_VERSION = "unknown";
+
+    public static final Version UNKNOWN = new Version(UNKNOWN_VERSION);
+
     private String version;
 
     public Version(String version) {
@@ -19,6 +23,15 @@ public class Version implements Comparable {
     public int compareTo(Object o) {
         if (!(o instanceof Version)) {
             throw new IllegalArgumentException("Expected: " + getClass().getName());
+        }
+        if(version.equals(((Version) o).version)){
+            return 0;
+        }
+        if(version.equals(UNKNOWN_VERSION)){
+            return -1;
+        }
+        if(((Version) o).version.equals(UNKNOWN_VERSION)){
+            return 1;
         }
         String version2 = ((Version) o).getVersion();
         String[] vals1 = version.split("\\.|-");

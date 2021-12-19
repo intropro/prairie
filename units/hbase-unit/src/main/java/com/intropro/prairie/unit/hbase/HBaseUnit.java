@@ -38,7 +38,9 @@ public class HBaseUnit extends HadoopUnit {
         Configuration conf = HBaseConfiguration.create(super.gatherConfigs());
         conf.addResource("hbase-site.prairie.xml");
         conf.setInt(HConstants.MASTER_PORT, PortProvider.nextPort());
+        conf.setInt(HConstants.MASTER_INFO_PORT, PortProvider.nextPort());
         conf.setInt(HConstants.REGIONSERVER_PORT, PortProvider.nextPort());
+        conf.setInt(HConstants.REGIONSERVER_INFO_PORT, PortProvider.nextPort());
         conf.set(HConstants.HBASE_DIR, getTmpDir().resolve("root").toString());
         conf.set(HConstants.ZOOKEEPER_QUORUM, zookeeperUnit.getHost() + ":" + zookeeperUnit.getPort());
         conf.set(HConstants.ZK_CFG_PROPERTY_PREFIX + HConstants.CLIENT_PORT_STR, "" + zookeeperUnit.getPort());

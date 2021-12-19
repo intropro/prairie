@@ -18,12 +18,15 @@ import com.intropro.prairie.comparator.CompareResponse;
 import com.intropro.prairie.format.Format;
 import com.intropro.prairie.format.InputFormatReader;
 import com.intropro.prairie.format.OutputFormatWriter;
+import com.intropro.prairie.format.binary.BinaryFormat;
 import com.intropro.prairie.format.exception.FormatException;
+import com.intropro.prairie.unit.cmd.CmdUnit;
 import com.intropro.prairie.unit.common.Version;
 import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.common.exception.DestroyUnitException;
 import com.intropro.prairie.unit.common.exception.InitUnitException;
 import com.intropro.prairie.unit.hadoop.HadoopUnit;
+import com.intropro.prairie.unit.hdfs.cmd.HdfsShell;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -36,7 +39,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.Properties;
 
 /**
  * Created by presidentio on 03.09.15.
@@ -44,9 +46,12 @@ import java.util.Properties;
 @PrairieUnit
 public class HdfsUnit extends HadoopUnit {
 
+    @PrairieUnit
+    private CmdUnit cmdUnit;
+
     private static final Logger LOGGER = LogManager.getLogger(HdfsUnit.class);
 
-    public static final Version VERSION = getVersion();
+    public static final Version VERSION = getVersion("org.apache.hadoop", "hadoop-hdfs");
 
     private MiniDFSCluster miniDFSCluster;
 
@@ -64,6 +69,7 @@ public class HdfsUnit extends HadoopUnit {
             miniDFSCluster = new MiniDFSCluster.Builder(gatherConfigs()).build();
             miniDFSCluster.waitClusterUp();
             createHomeDirectory();
+            cmdUnit.declare("hdfs", new HdfsShell(getConfig()));
         } catch (IOException e) {
             throw new InitUnitException("Failed to start hdfs", e);
         }
@@ -125,6 +131,10 @@ public class HdfsUnit extends HadoopUnit {
         }
     }
 
+    public void saveAs(InputStream inputStream, String dstPath) throws IOException {
+        saveAs(inputStream, dstPath, new BinaryFormat(), new BinaryFormat());
+    }
+
     public <T> CompareResponse<T> compare(Path path, Format<T> format,
                                           InputStream expectedStream, Format<T> expectedFormat) throws IOException {
         InputStream inputStream = null;
@@ -165,16 +175,6 @@ public class HdfsUnit extends HadoopUnit {
                                           String expectedResource, Format<T> expectedFormat) throws IOException {
         InputStream expectedStream = HdfsUnit.class.getClassLoader().getResourceAsStream(expectedResource);
         return compare(path, format, expectedStream, expectedFormat);
-    }
-
-    private static Version getVersion() {
-        Properties properties = new Properties();
-        try {
-            properties.load(HdfsUnit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.apache.hadoop/hadoop-hdfs/pom.properties"));
-        } catch (IOException e) {
-            LOGGER.error("Can't load hdfs version", e);
-        }
-        return new Version(properties.getProperty("version", "unknown"));
     }
 
 }

@@ -51,7 +51,8 @@ public class OozieJob {
             reties = 0;
             if (workflowJob.getStatus() == WorkflowJob.Status.FAILED
                     || workflowJob.getStatus() == WorkflowJob.Status.KILLED
-                    || workflowJob.getStatus() == WorkflowJob.Status.SUCCEEDED) {
+                    || workflowJob.getStatus() == WorkflowJob.Status.SUCCEEDED
+                    || workflowJob.getStatus() == WorkflowJob.Status.SUSPENDED) {
                 return;
             }
             try {

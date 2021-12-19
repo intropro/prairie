@@ -20,8 +20,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -126,5 +128,24 @@ public abstract class BaseUnit implements Unit {
     protected abstract void destroy() throws DestroyUnitException;
 
     protected abstract void init() throws InitUnitException;
+
+
+    protected static Version getVersion(String groupId, String artifactId) {
+        try {
+            InputStream pomPropertiesInputStream = BaseUnit.class.getClassLoader()
+                    .getResourceAsStream("META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties");
+            if (pomPropertiesInputStream != null) {
+                Properties properties = new Properties();
+                properties.load(pomPropertiesInputStream);
+                if (properties.containsKey("version")) {
+                    return new Version(properties.getProperty("version"));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Version.UNKNOWN;
+    }
 
 }

@@ -8,6 +8,8 @@ import com.intropro.prairie.unit.common.annotation.PrairieUnit;
 import com.intropro.prairie.unit.hdfs.HdfsUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -161,5 +163,19 @@ public class Hive2UnitTest {
         client.execute("create database testSequence; use testSequence;");
         client.execute(IOUtils.toString(Hive2UnitTest.class.getClassLoader().getResourceAsStream("hive/sequence/create-sequence.hql")));
         client.compare("show tables", "hive/sequence/expected.csv", new SvFormat(',')).assertEquals();
+    }
+
+    @Test
+//    @Ignore
+    public void testThriftClient() throws Exception {
+        hive2Unit.createClient().execute("create database test_thrift_client;");
+        HiveConf hiveConf = new HiveConf();
+        hiveConf.setVar(HiveConf.ConfVars.METASTOREURIS,
+                hive2Unit.getConfig().getVar(HiveConf.ConfVars.METASTOREURIS));
+        System.out.println(hiveConf);
+        System.out.println(hive2Unit.getConfig().getVar(HiveConf.ConfVars.METASTOREURIS));
+        HiveMetaStoreClient hiveMetaStoreClient = new HiveMetaStoreClient(hiveConf);
+        System.out.println(hiveMetaStoreClient.getAllDatabases());
+        Assert.assertEquals(2, hiveMetaStoreClient.getAllDatabases().size());
     }
 }
