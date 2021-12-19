@@ -82,7 +82,7 @@
         <commons-codec.version>1.10</commons-codec.version>
         <avro.version>1.7.4</avro.version>
         <commons-io.version>2.4</commons-io.version>
-        <log4j.version>2.5</log4j.version>
+        <log4j.version>2.16.0</log4j.version>
         <jackson-asl.version>1.9.1</jackson-asl.version>
         <jcommander.version>1.48</jcommander.version>
         <commons-lang.version>2.6</commons-lang.version>
